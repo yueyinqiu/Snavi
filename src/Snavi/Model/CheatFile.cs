@@ -1,3 +1,3 @@
 namespace Snavi.Model;
 
-public sealed record CheatFile(string Description, List<Token> Command, bool ExtraArgs = false);
+public sealed record CheatFile(string Description, IReadOnlyList<CommandToken> Command, bool ExtraArguments = false);

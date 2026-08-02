@@ -29,12 +29,12 @@ public static class CheatValidator
         }
     }
 
-    private static void ValidateProvider(Provider? provider, string? source, string context)
+    private static void ValidateProvider(ArgumentProvider? provider, string? source, string context)
     {
         if (provider is null)
             return;
-        if (!Provider.KnownTypes.Contains(provider.Type))
-            throw new InvalidDataException($"{context}未知的 provider 类型: {provider.Type}（可选: {string.Join(", ", Provider.KnownTypes)}）");
+        if (!ArgumentProvider.KnownTypes.Contains(provider.Type))
+            throw new InvalidDataException($"{context}未知的 provider 类型: {provider.Type}（可选: {string.Join(", ", ArgumentProvider.KnownTypes)}）");
         if (string.IsNullOrWhiteSpace(provider.Path))
             throw new InvalidDataException($"{context}provider 缺少 path");
         var cheatDir = source is null ? null : Path.GetDirectoryName(source);

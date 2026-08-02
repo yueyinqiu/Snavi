@@ -9,7 +9,7 @@ public sealed record ProviderResult(string Display, string Value, string? Previe
 public static class ProviderRunner
 {
     public static IReadOnlyList<ProviderResult> Run(
-        Provider provider, string cheatDir, IReadOnlyDictionary<string, string> resolved, Action<string> warn)
+        ArgumentProvider provider, string cheatDir, IReadOnlyDictionary<string, string> resolved, Action<string> warn)
     {
         var path = Path.IsPathRooted(provider.Path)
             ? provider.Path

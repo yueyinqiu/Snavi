@@ -53,7 +53,7 @@ public sealed class SnaviApp
         }
 
         var rendered = Renderer.Render(tokens);
-        if (cheat.ExtraArgs)
+        if (cheat.ExtraArguments)
         {
             var extra = _ui.Complete(rendered, "追加参数: ", []);
             if (extra is not null && extra.Length > 0)
@@ -74,7 +74,7 @@ public sealed class SnaviApp
         return _ui.Complete(header, $"{v.Name}: ", suggestions);
     }
 
-    private static string BuildHeader(IReadOnlyList<Token> command, int currentIndex, IReadOnlyDictionary<string, string> resolved)
+    private static string BuildHeader(IReadOnlyList<CommandToken> command, int currentIndex, IReadOnlyDictionary<string, string> resolved)
     {
         var sb = new StringBuilder();
         for (var i = 0; i < command.Count; i++)
