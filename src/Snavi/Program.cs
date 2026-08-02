@@ -17,8 +17,7 @@ if (args.Contains("--help") || args.Contains("-h"))
 try
 {
     var library = new CheatLibrary(cheatsDir);
-    var useTui = !Console.IsOutputRedirected && !Console.IsInputRedirected;
-    IUi ui = useTui ? new TerminalUi() : new ConsoleUi();
+    var ui = new FzfUi();
     var app = new SnaviApp(library, ui);
     string? result;
     try

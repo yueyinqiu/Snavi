@@ -1,3 +1,4 @@
+using System.Text;
 using Snavi.Loading;
 using Snavi.Model;
 using Snavi.Rendering;
@@ -24,24 +25,25 @@ public sealed class SnaviApp
             return null;
         }
 
-        var cheatChoice = _ui.Pick("选择命令:", entries.Select(e => new PickerItem(e.Cheat.Description, ToTemplate(e.Cheat))).ToList());
+        var cheatChoice = _ui.Pick("选择命令", entries.Select(e => new PickerItem(ToTemplate(e.Cheat), e.Cheat.Description)).ToList());
         if (cheatChoice is null)
             return null;
-        var entry = entries[cheatChoice.Value];
+        var entry = entries.First(e => ToTemplate(e.Cheat) == cheatChoice);
         var cheat = entry.Cheat;
         var cheatDir = Path.GetDirectoryName(entry.Path)!;
 
         var resolved = new Dictionary<string, string>();
         var tokens = new List<string>();
-        foreach (var token in cheat.Command)
+        for (var i = 0; i < cheat.Command.Count; i++)
         {
-            switch (token)
+            switch (cheat.Command[i])
             {
                 case Literal l:
                     tokens.Add(l.Value);
                     break;
                 case Variable v:
-                    var value = ResolveVariable(v, cheatDir, resolved);
+                    var header = BuildHeader(cheat.Command, i, resolved);
+                    var value = ResolveVariable(v, cheatDir, resolved, header);
                     if (value is null)
                         return null;
                     resolved[v.Name] = value;
@@ -53,28 +55,48 @@ public sealed class SnaviApp
         var rendered = Renderer.Render(tokens);
         if (cheat.ExtraArgs)
         {
-            var extra = _ui.Prompt($"{rendered}\n追加参数 (回车跳过): ");
-            if (!string.IsNullOrWhiteSpace(extra))
-                rendered = $"{rendered} {extra.Trim()}";
+            var extra = _ui.Complete(rendered, "追加参数: ", []);
+            if (extra is not null && extra.Length > 0)
+                rendered = $"{rendered} {extra}";
         }
         return rendered;
     }
 
-    private string? ResolveVariable(Variable v, string cheatDir, IReadOnlyDictionary<string, string> resolved)
+    private string? ResolveVariable(Variable v, string cheatDir, IReadOnlyDictionary<string, string> resolved, string header)
     {
         if (v.Provider is null)
-            return _ui.Prompt($"{v.Name}: ");
+            return _ui.Complete(header, $"{v.Name}: ", []);
 
         var results = ProviderRunner.Run(v.Provider, cheatDir, resolved, _ui.Warn);
-        if (results.Count == 0)
+        var suggestions = results.Select(r => new PickerItem(r.Display, r.Preview)).ToList();
+        if (suggestions.Count == 0)
+            _ui.Warn($"{v.Name} 的 provider 无可用选项，直接输入");
+        return _ui.Complete(header, $"{v.Name}: ", suggestions);
+    }
+
+    private static string BuildHeader(IReadOnlyList<Token> command, int currentIndex, IReadOnlyDictionary<string, string> resolved)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < command.Count; i++)
         {
-            _ui.Warn($"{v.Name} 的 provider 无可用选项，改为手动输入");
-            return _ui.Prompt($"{v.Name}: ");
+            if (i > 0)
+                sb.Append(' ');
+            switch (command[i])
+            {
+                case Literal l:
+                    sb.Append(l.Value);
+                    break;
+                case Variable v:
+                    if (resolved.TryGetValue(v.Name, out var value))
+                        sb.Append(value);
+                    else if (i == currentIndex)
+                        sb.Append($"\u001b[38;5;214m{{{v.Name}}}\u001b[0m");
+                    else
+                        sb.Append($"{{{v.Name}}}");
+                    break;
+            }
         }
-        var choice = _ui.Pick(v.Name, results.Select(r => new PickerItem(r.Display, r.Preview)).ToList());
-        if (choice is null)
-            return null;
-        return results[choice.Value].Value;
+        return sb.ToString();
     }
 
     private static string ToTemplate(CheatFile cheat) => string.Join(' ', cheat.Command.Select(t => t switch

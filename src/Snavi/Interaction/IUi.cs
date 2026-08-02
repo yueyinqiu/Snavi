@@ -1,11 +1,14 @@
 namespace Snavi.Interaction;
 
-public sealed record PickerItem(string Display, string? Preview);
+public sealed record PickerItem(string Display, string? Secondary = null, string? Value = null)
+{
+    public string ResolvedValue => Value ?? Display;
+}
 
 public interface IUi
 {
-    int? Pick(string prompt, IReadOnlyList<PickerItem> items);
-    string? Prompt(string message);
+    string? Pick(string title, IReadOnlyList<PickerItem> items);
+    string? Complete(string title, string prompt, IReadOnlyList<PickerItem> suggestions);
     void Warn(string message);
     void Close();
 }

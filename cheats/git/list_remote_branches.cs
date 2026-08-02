@@ -14,8 +14,8 @@ var psi = new ProcessStartInfo("git")
     RedirectStandardError = true,
 };
 psi.ArgumentList.Add("ls-remote");
-psi.ArgumentList.Add(remote);
 psi.ArgumentList.Add("--heads");
+psi.ArgumentList.Add(remote);
 using var git = Process.Start(psi)!;
 var stdout = git.StandardOutput.ReadToEnd();
 git.WaitForExit();
