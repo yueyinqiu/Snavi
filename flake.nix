@@ -11,9 +11,12 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       default = pkgs.mkShell {
-        packages = with pkgs; [
-          dotnet-sdk_10
+        packages = [
+          pkgs.dotnetCorePackages.sdk_10_0
         ];
+        shellHook = ''
+          export DOTNET_ROOT="${pkgs.dotnetCorePackages.sdk_10_0}/share/dotnet"
+        '';
       };
     });
   };
