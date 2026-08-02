@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Snavi.Interaction;
 
-public sealed class FzfUi : IUi
+public sealed class FzfUi : ISnaviUi
 {
     private const string Dim = "\u001b[38;5;245m";
     private const string Highlight = "\u001b[38;5;214m";

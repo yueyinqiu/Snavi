@@ -1,5 +1,4 @@
 ﻿using Snavi.Interaction;
-using Snavi.Loading;
 
 var cheatsDir = "cheats";
 for (var i = 0; i < args.Length - 1; i++)

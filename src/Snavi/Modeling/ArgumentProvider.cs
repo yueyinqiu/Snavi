@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Snavi.Model;
+namespace Snavi.CheatModeling;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = nameof(Type))]
 [JsonDerivedType(typeof(ArgumentProviderCsharp), nameof(ArgumentProviderCsharp))]

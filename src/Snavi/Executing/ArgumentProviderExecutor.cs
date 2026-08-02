@@ -1,19 +1,44 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
-using Snavi.Model;
+using Snavi.CheatModeling;
+using Snavi.UserInterfaces;
 
-namespace Snavi.Interaction;
+namespace Snavi.Executing;
 
-public sealed record ProviderResult(string Display, string Value, string? Preview = null);
-
-public static class ProviderRunner
+public sealed class ArgumentProviderExecutor(DirectoryInfo? directory)
 {
-    public static IReadOnlyList<ProviderResult> Run(
-        ArgumentProvider provider, string cheatDir, IReadOnlyDictionary<string, string> resolved, Action<string> warn)
+    private async IAsyncEnumerable<ArgumentSuggestion> RunCsharpAsync(
+        ArgumentProviderCsharp provider,
+        IReadOnlyList<string> variables,
+        [EnumeratorCancellation] CancellationToken cancellationToken
+    )
     {
-        var path = Path.IsPathRooted(provider.Path)
-            ? provider.Path
-            : Path.Combine(cheatDir, provider.Path);
+        if (directory is null)
+        {
+            yield return new ArgumentSuggestion("", "No suggestion provided as the given file is not located in a directory.");
+            yield break;
+        }
+        var path = Path.GetFullPath(provider.ScriptPath, directory.FullName);
+        var temp = Directory.CreateTempSubdirectory();
+
+        var inputAndOutput = temp.CreateSubdirectory("io");
+        temp = temp.CreateSubdirectory("temp");
+
+        var inputFile = Path.Combine(inputAndOutput.FullName, "i.json");
+
+        JsonSerializer.SerializeAsync(inputFile, new );
+    }
+
+    public IAsyncEnumerable<ArgumentSuggestion> RunAsync(
+        ArgumentProvider provider, DirectoryInfo? directory, IReadOnlyList<string> variables,
+        CancellationToken cancellationToken)
+    {
+        switch (provider)
+        {
+            case ArgumentProviderCsharp csharp:
+                break;
+        }
         if (!File.Exists(path))
         {
             warn($"provider 文件不存在: {path}");
@@ -24,7 +49,7 @@ public static class ProviderRunner
         var outputFile = Path.Combine(Path.GetTempPath(), $"snavi-{Guid.NewGuid():N}.out.json");
         try
         {
-            File.WriteAllText(inputFile, JsonSerializer.Serialize(resolved));
+            File.WriteAllText(inputFile, JsonSerializer.Serialize(variables));
             File.WriteAllText(outputFile, string.Empty);
 
             var psi = BuildProcess(provider.Type, path, inputFile, outputFile);
@@ -69,8 +94,6 @@ public static class ProviderRunner
                 psi.FileName = "dotnet";
                 psi.ArgumentList.Add("run");
                 psi.ArgumentList.Add(path);
-                psi.ArgumentList.Add("-p:SuppressTrimAnalysisWarnings=true");
-                psi.ArgumentList.Add("-p:SuppressAotAnalysisWarnings=true");
                 psi.ArgumentList.Add("--");
                 psi.ArgumentList.Add(inputFile);
                 psi.ArgumentList.Add(outputFile);
