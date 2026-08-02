@@ -5,11 +5,8 @@ namespace Snavi.Model;
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(Literal), "literal")]
 [JsonDerivedType(typeof(Variable), "variable")]
-[JsonDerivedType(typeof(Ref), "ref")]
 public abstract record Token;
 
 public sealed record Literal(string Value) : Token;
 
 public sealed record Variable(string Name, Provider? Provider) : Token;
-
-public sealed record Ref(string Name) : Token;

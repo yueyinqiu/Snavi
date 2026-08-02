@@ -1,50 +1,126 @@
 using System.Diagnostics;
+using System.Text.Json;
 using Snavi.Model;
 
 namespace Snavi.Interaction;
 
-public sealed record ProviderResult(string Display, string Value);
+public sealed record ProviderResult(string Display, string Value, string? Preview = null);
 
 public static class ProviderRunner
 {
-    public static IReadOnlyList<ProviderResult> Run(Provider provider, IReadOnlyDictionary<string, string> resolved)
+    public static IReadOnlyList<ProviderResult> Run(
+        Provider provider, string cheatDir, IReadOnlyDictionary<string, string> resolved, Action<string> warn)
     {
-        var psi = new ProcessStartInfo { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };
-        var args = provider.Command
-            .Select(token => token switch
+        var path = Path.IsPathRooted(provider.Path)
+            ? provider.Path
+            : Path.Combine(cheatDir, provider.Path);
+        if (!File.Exists(path))
+        {
+            warn($"provider 文件不存在: {path}");
+            return [];
+        }
+
+        var inputFile = Path.Combine(Path.GetTempPath(), $"snavi-{Guid.NewGuid():N}.in.json");
+        var outputFile = Path.Combine(Path.GetTempPath(), $"snavi-{Guid.NewGuid():N}.out.json");
+        try
+        {
+            File.WriteAllText(inputFile, JsonSerializer.Serialize(resolved));
+            File.WriteAllText(outputFile, string.Empty);
+
+            var psi = BuildProcess(provider.Type, path, inputFile, outputFile);
+            psi.UseShellExecute = false;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+
+            using var process = Process.Start(psi);
+            if (process is null)
             {
-                Literal l => l.Value,
-                Ref r => resolved.TryGetValue(r.Name, out var v) ? v : string.Empty,
-                _ => throw new InvalidOperationException("provider 中出现了非法 token"),
-            })
-            .ToList();
-        if (args.Count == 0)
-            throw new InvalidOperationException("provider 的 command 为空");
-        psi.FileName = args[0];
-        for (var i = 1; i < args.Count; i++)
-            psi.ArgumentList.Add(args[i]);
+                warn($"无法启动 provider: {path}");
+                return [];
+            }
+            var stderr = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                warn($"provider 执行失败 (exit {process.ExitCode}): {stderr.Trim()}");
+                return [];
+            }
 
-        using var process = Process.Start(psi)
-            ?? throw new InvalidOperationException($"无法启动 provider: {psi.FileName}");
-        var stdout = process.StandardOutput.ReadToEnd();
-        var stderr = process.StandardError.ReadToEnd();
-        process.WaitForExit();
-        if (process.ExitCode != 0)
-            throw new InvalidOperationException($"provider 执行失败 (exit {process.ExitCode}): {stderr.Trim()}");
-
-        return stdout
-            .Split('\n')
-            .Select(l => l.TrimEnd('\r'))
-            .Where(l => l.Length > 0)
-            .Select(ParseLine)
-            .ToList();
+            return Parse(File.ReadAllText(outputFile));
+        }
+        catch (Exception ex)
+        {
+            warn($"provider 出错: {ex.Message}");
+            return [];
+        }
+        finally
+        {
+            TryDelete(inputFile);
+            TryDelete(outputFile);
+        }
     }
 
-    private static ProviderResult ParseLine(string line)
+    private static ProcessStartInfo BuildProcess(string type, string path, string inputFile, string outputFile)
     {
-        var idx = line.LastIndexOf('\t');
-        if (idx < 0)
-            return new ProviderResult(line, line);
-        return new ProviderResult(line[..idx], line[(idx + 1)..]);
+        var psi = new ProcessStartInfo();
+        switch (type)
+        {
+            case "csharp":
+                psi.FileName = "dotnet";
+                psi.ArgumentList.Add("run");
+                psi.ArgumentList.Add(path);
+                psi.ArgumentList.Add("-p:SuppressTrimAnalysisWarnings=true");
+                psi.ArgumentList.Add("-p:SuppressAotAnalysisWarnings=true");
+                psi.ArgumentList.Add("--");
+                psi.ArgumentList.Add(inputFile);
+                psi.ArgumentList.Add(outputFile);
+                break;
+            case "sh":
+                psi.FileName = "sh";
+                psi.ArgumentList.Add(path);
+                psi.ArgumentList.Add(inputFile);
+                psi.ArgumentList.Add(outputFile);
+                break;
+            default:
+                psi.FileName = path;
+                psi.ArgumentList.Add(inputFile);
+                psi.ArgumentList.Add(outputFile);
+                break;
+        }
+        return psi;
+    }
+
+    private static IReadOnlyList<ProviderResult> Parse(string content)
+    {
+        using var doc = JsonDocument.Parse(content);
+        var list = new List<ProviderResult>();
+        foreach (var element in doc.RootElement.EnumerateArray())
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.String:
+                    var s = element.GetString() ?? string.Empty;
+                    list.Add(new ProviderResult(s, s));
+                    break;
+                case JsonValueKind.Object:
+                    var value = element.TryGetProperty("value", out var v) ? v.GetString() : null;
+                    var display = element.TryGetProperty("display", out var d) ? d.GetString() : null;
+                    var preview = element.TryGetProperty("preview", out var p) ? p.GetString() : null;
+                    list.Add(new ProviderResult(display ?? value ?? string.Empty, value ?? string.Empty, preview));
+                    break;
+            }
+        }
+        return list;
+    }
+
+    private static void TryDelete(string path)
+    {
+        try
+        {
+            File.Delete(path);
+        }
+        catch
+        {
+        }
     }
 }

@@ -15,22 +15,22 @@ public sealed class SnaviApp
         _ui = ui;
     }
 
-    public void Run()
+    public string? Run()
     {
         var entries = _library.Cheats;
         if (entries.Count == 0)
         {
             Console.WriteLine("没有找到任何 cheat");
-            return;
+            return null;
         }
 
-        // 1. 选大命令
-        var choice = _ui.Pick("选择命令:", entries.Select(e => e.Cheat.Description).ToList());
-        if (choice is null)
-            return;
-        var cheat = entries[choice.Value].Cheat;
+        var cheatChoice = _ui.Pick("选择命令:", entries.Select(e => new PickerItem(e.Cheat.Description, ToTemplate(e.Cheat))).ToList());
+        if (cheatChoice is null)
+            return null;
+        var entry = entries[cheatChoice.Value];
+        var cheat = entry.Cheat;
+        var cheatDir = Path.GetDirectoryName(entry.Path)!;
 
-        // 2. 顺序问变量
         var resolved = new Dictionary<string, string>();
         var tokens = new List<string>();
         foreach (var token in cheat.Command)
@@ -41,16 +41,15 @@ public sealed class SnaviApp
                     tokens.Add(l.Value);
                     break;
                 case Variable v:
-                    var value = ResolveVariable(v, resolved);
+                    var value = ResolveVariable(v, cheatDir, resolved);
                     if (value is null)
-                        return;
+                        return null;
                     resolved[v.Name] = value;
                     tokens.Add(value);
                     break;
             }
         }
 
-        // 3. 可选编辑
         var rendered = Renderer.Render(tokens);
         if (cheat.ExtraArgs)
         {
@@ -58,20 +57,30 @@ public sealed class SnaviApp
             if (!string.IsNullOrWhiteSpace(extra))
                 rendered = $"{rendered} {extra.Trim()}";
         }
-
-        // 4. 渲染输出
-        Console.WriteLine(rendered);
+        return rendered;
     }
 
-    private string? ResolveVariable(Variable v, IReadOnlyDictionary<string, string> resolved)
+    private string? ResolveVariable(Variable v, string cheatDir, IReadOnlyDictionary<string, string> resolved)
     {
         if (v.Provider is null)
             return _ui.Prompt($"{v.Name}: ");
 
-        var results = ProviderRunner.Run(v.Provider, resolved);
-        var choice = _ui.Pick(v.Name, results.Select(r => r.Display).ToList());
+        var results = ProviderRunner.Run(v.Provider, cheatDir, resolved, _ui.Warn);
+        if (results.Count == 0)
+        {
+            _ui.Warn($"{v.Name} 的 provider 无可用选项，改为手动输入");
+            return _ui.Prompt($"{v.Name}: ");
+        }
+        var choice = _ui.Pick(v.Name, results.Select(r => new PickerItem(r.Display, r.Preview)).ToList());
         if (choice is null)
             return null;
         return results[choice.Value].Value;
     }
+
+    private static string ToTemplate(CheatFile cheat) => string.Join(' ', cheat.Command.Select(t => t switch
+    {
+        Literal l => l.Value,
+        Variable v => $"{{{v.Name}}}",
+        _ => string.Empty,
+    }));
 }

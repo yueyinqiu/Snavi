@@ -22,30 +22,26 @@ public static class CheatValidator
                         throw new InvalidDataException($"{context}variable 缺少 name");
                     if (names.Contains(v.Name))
                         throw new InvalidDataException($"{context}重复的变量名: {v.Name}");
-                    ValidateProvider(v.Provider, names, context);
+                    ValidateProvider(v.Provider, source, context);
                     names.Add(v.Name);
                     break;
-                case Ref:
-                    throw new InvalidDataException($"{context}ref 只能在 provider 中使用");
             }
         }
     }
 
-    private static void ValidateProvider(Provider? provider, IReadOnlySet<string> names, string context)
+    private static void ValidateProvider(Provider? provider, string? source, string context)
     {
         if (provider is null)
             return;
-        if (provider.Command.Count == 0)
-            throw new InvalidDataException($"{context}provider 的 command 不能为空");
-        foreach (var token in provider.Command)
-        {
-            switch (token)
-            {
-                case Variable:
-                    throw new InvalidDataException($"{context}provider 中不能包含 variable");
-                case Ref r when !names.Contains(r.Name):
-                    throw new InvalidDataException($"{context}引用了不存在或尚未定义的变量: {r.Name}");
-            }
-        }
+        if (!Provider.KnownTypes.Contains(provider.Type))
+            throw new InvalidDataException($"{context}未知的 provider 类型: {provider.Type}（可选: {string.Join(", ", Provider.KnownTypes)}）");
+        if (string.IsNullOrWhiteSpace(provider.Path))
+            throw new InvalidDataException($"{context}provider 缺少 path");
+        var cheatDir = source is null ? null : Path.GetDirectoryName(source);
+        var path = Path.IsPathRooted(provider.Path)
+            ? provider.Path
+            : cheatDir is null ? provider.Path : Path.Combine(cheatDir, provider.Path);
+        if (!File.Exists(path))
+            throw new InvalidDataException($"{context}provider 文件不存在: {path}");
     }
 }

@@ -17,7 +17,20 @@ if (args.Contains("--help") || args.Contains("-h"))
 try
 {
     var library = new CheatLibrary(cheatsDir);
-    new SnaviApp(library, new ConsoleUi()).Run();
+    var useTui = !Console.IsOutputRedirected && !Console.IsInputRedirected;
+    IUi ui = useTui ? new TerminalUi() : new ConsoleUi();
+    var app = new SnaviApp(library, ui);
+    string? result;
+    try
+    {
+        result = app.Run();
+    }
+    finally
+    {
+        ui.Close();
+    }
+    if (result is not null)
+        Console.WriteLine(result);
 }
 catch (Exception ex)
 {

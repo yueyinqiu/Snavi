@@ -9,14 +9,7 @@
     {
       "type": "variable",
       "name": "镜像",
-      "provider": {
-        "command": [
-          { "type": "literal", "value": "docker" },
-          { "type": "literal", "value": "images" },
-          { "type": "literal", "value": "--format" },
-          { "type": "literal", "value": "{{.Repository}}:{{.Tag}}" }
-        ]
-      }
+      "provider": { "type": "csharp", "path": "list_images.cs" }
     }
   ]
 }

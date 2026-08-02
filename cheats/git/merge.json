@@ -6,15 +6,7 @@
     {
       "type": "variable",
       "name": "分支",
-      "provider": {
-        "command": [
-          { "type": "literal", "value": "git" },
-          { "type": "literal", "value": "for-each-ref" },
-          { "type": "literal", "value": "--format" },
-          { "type": "literal", "value": "%(refname:short)" },
-          { "type": "literal", "value": "refs/heads" }
-        ]
-      }
+      "provider": { "type": "csharp", "path": "list_branches.cs" }
     }
   ]
 }
