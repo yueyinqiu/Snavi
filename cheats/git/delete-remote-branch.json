@@ -1,0 +1,31 @@
+{
+  "description": "删除远程分支",
+  "command": [
+    { "type": "literal", "value": "git" },
+    { "type": "literal", "value": "push" },
+    { "type": "literal", "value": "origin" },
+    { "type": "literal", "value": "--delete" },
+    {
+      "type": "variable",
+      "name": "远程",
+      "provider": {
+        "command": [
+          { "type": "literal", "value": "git" },
+          { "type": "literal", "value": "remote" }
+        ]
+      }
+    },
+    {
+      "type": "variable",
+      "name": "分支",
+      "provider": {
+        "command": [
+          { "type": "literal", "value": "git" },
+          { "type": "literal", "value": "ls-remote" },
+          { "type": "ref", "name": "远程" },
+          { "type": "literal", "value": "--heads" }
+        ]
+      }
+    }
+  ]
+}

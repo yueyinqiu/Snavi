@@ -1,0 +1,22 @@
+{
+  "description": "运行一个容器",
+  "extra_args": true,
+  "command": [
+    { "type": "literal", "value": "docker" },
+    { "type": "literal", "value": "run" },
+    { "type": "literal", "value": "--rm" },
+    { "type": "literal", "value": "-it" },
+    {
+      "type": "variable",
+      "name": "镜像",
+      "provider": {
+        "command": [
+          { "type": "literal", "value": "docker" },
+          { "type": "literal", "value": "images" },
+          { "type": "literal", "value": "--format" },
+          { "type": "literal", "value": "{{.Repository}}:{{.Tag}}" }
+        ]
+      }
+    }
+  ]
+}

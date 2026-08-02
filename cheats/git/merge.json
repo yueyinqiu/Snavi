@@ -1,0 +1,20 @@
+{
+  "description": "合并分支到当前分支",
+  "command": [
+    { "type": "literal", "value": "git" },
+    { "type": "literal", "value": "merge" },
+    {
+      "type": "variable",
+      "name": "分支",
+      "provider": {
+        "command": [
+          { "type": "literal", "value": "git" },
+          { "type": "literal", "value": "for-each-ref" },
+          { "type": "literal", "value": "--format" },
+          { "type": "literal", "value": "%(refname:short)" },
+          { "type": "literal", "value": "refs/heads" }
+        ]
+      }
+    }
+  ]
+}
