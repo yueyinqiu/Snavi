@@ -20,7 +20,7 @@ sealed class ArgumentProviderExector(DirectoryInfo? directory) : IArgumentProvid
             ArgumentProviderEmpty empty => new ArgumentProviderEmptyExecutor().RunAsync(
                 empty, variables, cancellationToken
             ),
-            _ => throw new Exception($"Unknown argument provider type '{provider.Type}'.")
+            _ => throw new Exception($"Unknown argument provider type '{provider.GetType().Name}'.")
         };
     }
 }

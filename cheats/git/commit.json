@@ -1,9 +1,10 @@
 {
-  "description": "创建提交",
-  "command": [
-    { "type": "literal", "value": "git" },
-    { "type": "literal", "value": "commit" },
-    { "type": "literal", "value": "-m" },
-    { "type": "variable", "name": "提交信息" }
-  ]
+  "Description": "创建提交",
+  "Command": [
+    { "Type": "CommandTokenLiteral", "Value": "git" },
+    { "Type": "CommandTokenLiteral", "Value": "commit" },
+    { "Type": "CommandTokenLiteral", "Value": "-m" },
+    { "Type": "CommandTokenVariable", "Name": "提交信息", "Provider": { "Type": "ArgumentProviderEmpty" } }
+  ],
+  "ExtraArguments": false
 }

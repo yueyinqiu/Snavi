@@ -1,15 +1,19 @@
 {
-  "description": "运行一个容器",
-  "extra_args": true,
-  "command": [
-    { "type": "literal", "value": "docker" },
-    { "type": "literal", "value": "run" },
-    { "type": "literal", "value": "--rm" },
-    { "type": "literal", "value": "-it" },
+  "Description": "运行一个容器",
+  "Command": [
+    { "Type": "CommandTokenLiteral", "Value": "docker" },
+    { "Type": "CommandTokenLiteral", "Value": "run" },
+    { "Type": "CommandTokenLiteral", "Value": "--rm" },
+    { "Type": "CommandTokenLiteral", "Value": "-it" },
     {
-      "type": "variable",
-      "name": "镜像",
-      "provider": { "type": "csharp", "path": "list_images.cs" }
+      "Type": "CommandTokenVariable",
+      "Name": "镜像",
+      "Provider": {
+        "Type": "ArgumentProviderCsharp",
+        "DotnetPath": "dotnet",
+        "ScriptPath": "list_images.cs"
+      }
     }
-  ]
+  ],
+  "ExtraArguments": true
 }

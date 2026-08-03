@@ -1,12 +1,17 @@
 {
-  "description": "合并分支到当前分支",
-  "command": [
-    { "type": "literal", "value": "git" },
-    { "type": "literal", "value": "merge" },
+  "Description": "合并分支到当前分支",
+  "Command": [
+    { "Type": "CommandTokenLiteral", "Value": "git" },
+    { "Type": "CommandTokenLiteral", "Value": "merge" },
     {
-      "type": "variable",
-      "name": "分支",
-      "provider": { "type": "csharp", "path": "list_branches.cs" }
+      "Type": "CommandTokenVariable",
+      "Name": "分支",
+      "Provider": {
+        "Type": "ArgumentProviderCsharp",
+        "DotnetPath": "dotnet",
+        "ScriptPath": "list_branches.cs"
+      }
     }
-  ]
+  ],
+  "ExtraArguments": false
 }

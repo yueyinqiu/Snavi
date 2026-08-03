@@ -1,18 +1,27 @@
 {
-  "description": "删除远程分支",
-  "command": [
-    { "type": "literal", "value": "git" },
-    { "type": "literal", "value": "push" },
-    { "type": "literal", "value": "--delete" },
+  "Description": "删除远程分支",
+  "Command": [
+    { "Type": "CommandTokenLiteral", "Value": "git" },
+    { "Type": "CommandTokenLiteral", "Value": "push" },
+    { "Type": "CommandTokenLiteral", "Value": "--delete" },
     {
-      "type": "variable",
-      "name": "远程",
-      "provider": { "type": "csharp", "path": "list_remotes.cs" }
+      "Type": "CommandTokenVariable",
+      "Name": "远程",
+      "Provider": {
+        "Type": "ArgumentProviderCsharp",
+        "DotnetPath": "dotnet",
+        "ScriptPath": "list_remotes.cs"
+      }
     },
     {
-      "type": "variable",
-      "name": "分支",
-      "provider": { "type": "csharp", "path": "list_remote_branches.cs" }
+      "Type": "CommandTokenVariable",
+      "Name": "分支",
+      "Provider": {
+        "Type": "ArgumentProviderCsharp",
+        "DotnetPath": "dotnet",
+        "ScriptPath": "list_remote_branches.cs"
+      }
     }
-  ]
+  ],
+  "ExtraArguments": false
 }

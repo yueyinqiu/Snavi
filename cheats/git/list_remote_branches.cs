@@ -3,9 +3,13 @@ using System.Text.Json;
 
 AppContext.SetSwitch("System.Text.Json.JsonSerializer.IsReflectionEnabledByDefault", true);
 
-var vars = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(args[0])) ?? new();
-if (!vars.TryGetValue("远程", out var remote))
+var input = JsonSerializer.Deserialize<Input>(Console.In.ReadToEnd())!;
+var remote = input.VariableValues.FirstOrDefault();
+if (remote is null)
+{
+    File.WriteAllText(input.OutputFilePath, "{\"Completions\":[]}");
     return;
+}
 
 var psi = new ProcessStartInfo("git")
 {
@@ -23,4 +27,9 @@ var branches = stdout
     .Split('\n', StringSplitOptions.RemoveEmptyEntries)
     .Select(l => l.Split('\t').Last().Replace("refs/heads/", ""))
     .ToList();
-File.WriteAllText(args[1], JsonSerializer.Serialize(branches));
+File.WriteAllText(
+    input.OutputFilePath,
+    JsonSerializer.Serialize(new { Completions = branches.Select(b => new { Value = b, Description = b }) })
+);
+
+record Input(string OutputFilePath, string TemporaryDirectoryPath, IReadOnlyList<string> VariableValues);

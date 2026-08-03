@@ -3,6 +3,8 @@ using System.Text.Json;
 
 AppContext.SetSwitch("System.Text.Json.JsonSerializer.IsReflectionEnabledByDefault", true);
 
+var input = JsonSerializer.Deserialize<Input>(Console.In.ReadToEnd())!;
+
 var psi = new ProcessStartInfo("git")
 {
     UseShellExecute = false,
@@ -19,4 +21,9 @@ var branches = stdout
     .Split('\n', StringSplitOptions.RemoveEmptyEntries)
     .Select(l => l.Trim())
     .ToList();
-File.WriteAllText(args[1], JsonSerializer.Serialize(branches));
+File.WriteAllText(
+    input.OutputFilePath,
+    JsonSerializer.Serialize(new { Completions = branches.Select(b => new { Value = b, Description = b }) })
+);
+
+record Input(string OutputFilePath, string TemporaryDirectoryPath, IReadOnlyList<string> VariableValues);
