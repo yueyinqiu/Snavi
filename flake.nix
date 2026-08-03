@@ -14,6 +14,9 @@
         packages = [
           pkgs.dotnetCorePackages.sdk_10_0
           pkgs.fzf
+          (pkgs.writeShellScriptBin "snavi-dev-publish" ''
+            dotnet publish src/Snavi/Snavi.csproj -c Release -o publish
+          '')
         ];
         shellHook = ''
           export DOTNET_ROOT="${pkgs.dotnetCorePackages.sdk_10_0}/share/dotnet"
