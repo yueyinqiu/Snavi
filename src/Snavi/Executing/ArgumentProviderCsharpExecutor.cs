@@ -5,10 +5,11 @@ using Snavi.CheatModeling;
 
 namespace Snavi.Executing;
 
-sealed class ArgumentProviderCsharpExecutor(DirectoryInfo? directory) : IArgumentProviderExecutor<ArgumentProviderCsharp>
+sealed class ArgumentProviderCsharpExecutor(string dotnet) : IArgumentProviderExecutor<ArgumentProviderCsharp>
 {
     public async IAsyncEnumerable<ArgumentSuggestion> RunAsync(
         ArgumentProviderCsharp provider,
+        DirectoryInfo? directory,
         IReadOnlyList<string> variables,
         [EnumeratorCancellation] CancellationToken cancellationToken
     )
@@ -24,7 +25,7 @@ sealed class ArgumentProviderCsharpExecutor(DirectoryInfo? directory) : IArgumen
         var outputs = logs.CreateSubdirectory("outputs");
         var completions = Path.Combine(outputs.FullName, "completions.json");
 
-        var command = Cli.Wrap(provider.DotnetPath);
+        var command = Cli.Wrap(dotnet);
         command = command.WithArguments([
             "run", Path.GetFullPath(provider.ScriptPath, directory.FullName)
         ]);

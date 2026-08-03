@@ -4,7 +4,7 @@ using CliWrap.Buffered;
 
 namespace Snavi.Interacting;
 
-sealed class UserInterfaceFzf : IUserInterface
+sealed class UserInterfaceFzf(string fzf) : IUserInterface
 {
     public async Task<T?> PickAsync<T>(
         IHighlightedString title,
@@ -17,7 +17,7 @@ sealed class UserInterfaceFzf : IUserInterface
 
         var delimiter = Guid.NewGuid().ToString("N");
 
-        var command = Cli.Wrap("fzf");
+        var command = Cli.Wrap(fzf);
         command = command.WithValidation(CommandResultValidation.None);
         command = command.WithArguments([
             "--ansi",
@@ -52,7 +52,7 @@ sealed class UserInterfaceFzf : IUserInterface
     {
         var delimiter = Guid.NewGuid().ToString("N");
 
-        var command = Cli.Wrap("fzf");
+        var command = Cli.Wrap(fzf);
         command = command.WithValidation(CommandResultValidation.None);
         command = command.WithArguments([
             "--print-query",

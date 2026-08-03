@@ -6,7 +6,11 @@ using Snavi.Interacting;
 
 namespace Snavi;
 
-sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
+sealed class SnaviApp(
+    IReadOnlyList<FileInfo> cheats,
+    IUserInterface ui,
+    IArgumentProviderExecutor<ArgumentProvider> executor
+)
 {
     private async IAsyncEnumerable<Command> EnumerateValidCheatsAsync(
         [EnumeratorCancellation] CancellationToken cancellationToken
@@ -95,7 +99,7 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
         CancellationToken cancellationToken
     )
     {
-        var suggestions = new ArgumentProviderExector(directory).RunAsync(variable.Provider, variables, cancellationToken);
+        var suggestions = executor.RunAsync(variable.Provider, directory, variables, cancellationToken);
         var result = await ui.InputAsync(header, $"{variable.Name} = ", suggestions, cancellationToken);
         return result;
     }
