@@ -22,7 +22,7 @@ sealed class UserInterfaceFzf : IUserInterface
             "--header", title.String,
 
             "--accept-nth", "1",
-            "--with-nth", "2,3",
+            "--with-nth", "{2} {3}",
             "--delimiter", delimiter
         ]);
         command = command.WithStandardInputPipe(PipeSource.FromString(

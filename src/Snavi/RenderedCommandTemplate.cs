@@ -31,7 +31,6 @@ public sealed record RenderedCommandTemplate(string String, Range Highlight) : I
         var builder = new StringBuilder();
         foreach (var token in command)
         {
-            builder.Append(' ');
             switch (token)
             {
                 case CommandTokenVariable variable:
@@ -48,8 +47,12 @@ public sealed record RenderedCommandTemplate(string String, Range Highlight) : I
                     builder.Append(Escape(literal.Value));
                     break;
             }
+            builder.Append(' ');
         }
 
-        return new(builder.Remove(0, 1).ToString(), highlight ?? 0..0);
+        if (builder.Length == 0)
+            return new("", highlight ?? 0..0);
+
+        return new(builder.Remove(builder.Length - 1, 1).ToString(), highlight ?? 0..0);
     }
 }
