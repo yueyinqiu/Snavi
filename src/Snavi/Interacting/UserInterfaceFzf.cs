@@ -55,7 +55,6 @@ sealed class UserInterfaceFzf : IUserInterface
             "--ansi",
             "--header", ToAnsiString(title),
 
-            "--accept-nth", "1",
             "--with-nth", "{1}        {2}",
             "--delimiter", delimiter,
             "--bind", "tab:transform-query(printf '%s' '{1}')"
@@ -65,11 +64,9 @@ sealed class UserInterfaceFzf : IUserInterface
             .ToArrayAsync();
         command = command.WithStandardInputPipe(PipeSource.FromString(string.Join(Environment.NewLine, lines)));
         var output = await command.ExecuteBufferedAsync(cancellationToken);
-        var outputLines = output.StandardOutput.Split(Environment.NewLine);
-        var query = outputLines[0];
-        if (query.Length == 0 && outputLines.Length > 1)
-            return outputLines[1];
-        return query;
+        if (output.ExitCode != 0 && output.ExitCode != 1)
+            return null;
+        return output.StandardOutput.Split(Environment.NewLine)[0];
     }
 
     private static string ToAnsiString(IHighlightedString highlightedString)
