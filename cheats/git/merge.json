@@ -1,17 +1,23 @@
 {
-  "Description": "Merge a branch into the current branch",
-  "Command": [
-    { "$type": "CommandTokenLiteral", "Value": "git" },
-    { "$type": "CommandTokenLiteral", "Value": "merge" },
-    {
-      "$type": "CommandTokenVariable",
-      "Name": "Branch",
-      "Provider": {
-        "$type": "ArgumentProviderCsharp",
-        "DotnetPath": "dotnet",
-        "ScriptPath": "list_branches.cs"
-      }
-    }
-  ],
-  "ExtraArguments": false
+    "Description": "Merge a branch into the current branch",
+    "Command": [
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "git"
+        },
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "merge"
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "branch",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "DotnetPath": "dotnet",
+                "ScriptPath": "list_branches.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
 }

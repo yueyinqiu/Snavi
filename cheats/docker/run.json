@@ -1,19 +1,31 @@
 {
-  "Description": "Run a container",
-  "Command": [
-    { "$type": "CommandTokenLiteral", "Value": "docker" },
-    { "$type": "CommandTokenLiteral", "Value": "run" },
-    { "$type": "CommandTokenLiteral", "Value": "--rm" },
-    { "$type": "CommandTokenLiteral", "Value": "-it" },
-    {
-      "$type": "CommandTokenVariable",
-      "Name": "image",
-      "Provider": {
-        "$type": "ArgumentProviderCsharp",
-        "DotnetPath": "dotnet",
-        "ScriptPath": "list-images.cs"
-      }
-    }
-  ],
-  "ExtraArguments": true
+    "Description": "Run a container",
+    "Command": [
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "docker"
+        },
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "run"
+        },
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "--rm"
+        },
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "-it"
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "image",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "DotnetPath": "dotnet",
+                "ScriptPath": "list-images.cs"
+            }
+        }
+    ],
+    "ExtraArguments": true
 }

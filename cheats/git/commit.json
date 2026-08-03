@@ -1,10 +1,25 @@
 {
-  "Description": "Create a commit",
-  "Command": [
-    { "$type": "CommandTokenLiteral", "Value": "git" },
-    { "$type": "CommandTokenLiteral", "Value": "commit" },
-    { "$type": "CommandTokenLiteral", "Value": "-m" },
-    { "$type": "CommandTokenVariable", "Name": "message", "Provider": { "$type": "ArgumentProviderEmpty" } }
-  ],
-  "ExtraArguments": false
+    "Description": "Create a commit",
+    "Command": [
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "git"
+        },
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "commit"
+        },
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "-m"
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "message",
+            "Provider": {
+                "$type": "ArgumentProviderEmpty"
+            }
+        }
+    ],
+    "ExtraArguments": false
 }
