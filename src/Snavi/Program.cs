@@ -1,37 +1,20 @@
-﻿using Snavi.Interaction;
+﻿using CliFx;
+using CliFx.Binding;
+using CliFx.Infrastructure;
+using Snavi.Interacting;
+using Snavi.Interaction;
 
-var cheatsDir = "cheats";
-for (var i = 0; i < args.Length - 1; i++)
-{
-    if (args[i] is "--cheats" or "-c")
-        cheatsDir = args[i + 1];
-}
+namespace Snavi;
 
-if (args.Contains("--help") || args.Contains("-h"))
+[Command("Run")]
+public partial class RunCommand : ICommand
 {
-    Console.WriteLine("用法: snavi [--cheats <目录>]");
-    return;
-}
+    [CommandOption("cheats", 'c')]
+    public required IReadOnlyList<FileInfo> Cheats { get; set; }
 
-try
-{
-    var library = new CheatLibrary(cheatsDir);
-    var ui = new FzfUi();
-    var app = new SnaviApp(library, ui);
-    string? result;
-    try
+    public async ValueTask ExecuteAsync(IConsole console)
     {
-        result = app.Run();
+        var result = await new SnaviApp(Cheats, new UserInterfaceFzf()).RunAsync(console.RegisterCancellationHandler());
+        console.WriteLine(result);
     }
-    finally
-    {
-        ui.Close();
-    }
-    if (result is not null)
-        Console.WriteLine(result);
-}
-catch (Exception ex)
-{
-    Console.Error.WriteLine($"错误: {ex.Message}");
-    Environment.ExitCode = 1;
 }

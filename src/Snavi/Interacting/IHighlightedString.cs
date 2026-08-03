@@ -1,3 +1,5 @@
+namespace Snavi.Interacting;
+
 interface IHighlightedString
 {
     string String { get; }

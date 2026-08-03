@@ -1,7 +1,18 @@
-namespace Snavi.UserInterfaces;
+namespace Snavi.Interacting;
 
 interface IUserInterface
 {
-    Task<T> PickCommandAsync<T>(IAsyncEnumerable<T> commands, CancellationToken cancellationToken) where T : IPickableCommand;
-    Task<ArgumentSuggestion> CompleteArgumentAsync(IHighlightedString title, string prompt, IAsyncEnumerable<ArgumentSuggestion> suggestions, CancellationToken cancellationToken);
+    Task<T?> PickAsync<T>(
+        IHighlightedString title,
+        string prompt,
+        IAsyncEnumerable<T> suggestions,
+        CancellationToken cancellationToken
+    ) where T : IPickable;
+
+    Task<string?> InputAsync(
+        IHighlightedString title,
+        string prompt,
+        IAsyncEnumerable<IPickable> suggestions,
+        CancellationToken cancellationToken
+    );
 }

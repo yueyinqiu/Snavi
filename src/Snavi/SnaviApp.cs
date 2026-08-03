@@ -1,7 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Snavi.CheatModeling;
-using Snavi.UserInterfaces;
+using Snavi.Executing;
+using Snavi.Interacting;
 
 namespace Snavi.Interaction;
 
@@ -49,10 +50,15 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
 
     public async Task<string> RunAsync(CancellationToken cancellationToken)
     {
-        var cheat = await ui.PickCommandAsync(
+        var cheat = await ui.PickAsync(
+            new RenderedCommandTemplate("Choose a Command", 0..0),
+            "Command: ",
             this.EnumerateValidCheatsAsync(cancellationToken),
             cancellationToken
         );
+
+        if (cheat is null)
+            return "Cancelled.";
 
         var variables = new List<string>();
         foreach (var token in cheat.Cheat.Command)
@@ -61,6 +67,8 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
             {
                 var header = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables);
                 var value = await InputVariableAsync(variable, cheat.Directory, variables, header, cancellationToken);
+                if (value is null)
+                    return "Cancelled.";
                 variables.Add(value);
             }
         }
@@ -68,7 +76,7 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
         var result = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables);
         if (cheat.Cheat.ExtraArguments)
         {
-            var extraArguments = await ui.CompleteArgumentAsync(
+            var extraArguments = await ui.InputAsync(
                 result,
                 "Extra Arguments: ",
                 Array.Empty<ArgumentSuggestion>().ToAsyncEnumerable(),
@@ -79,7 +87,7 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
         return result.String;
     }
 
-    private async Task<string> InputVariableAsync(
+    private async Task<string?> InputVariableAsync(
         CommandTokenVariable variable,
         DirectoryInfo? directory,
         IReadOnlyList<string> variables,
@@ -87,8 +95,8 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
         CancellationToken cancellationToken
     )
     {
-        var suggestions = ArgumentProviderExecutor.RunAsync(variable.Provider, directory, variables, cancellationToken);
-        var result = await ui.CompleteArgumentAsync(header, $"{variable.Name}: ", suggestions, cancellationToken);
-        return result.Value;
+        var suggestions = new ArgumentProviderExector(directory).RunAsync(variable.Provider, variables, cancellationToken);
+        var result = await ui.InputAsync(header, $"{variable.Name}: ", suggestions, cancellationToken);
+        return result;
     }
 }

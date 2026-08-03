@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Text;
 using Snavi.CheatModeling;
+using Snavi.Interacting;
 
 namespace Snavi;
 
