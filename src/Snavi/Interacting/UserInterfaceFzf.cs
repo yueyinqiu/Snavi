@@ -32,8 +32,10 @@ sealed class UserInterfaceFzf : IUserInterface
             )
         ));
         var output = await command.ExecuteBufferedAsync(cancellationToken);
-        
-        _ = suggestionDictionary.TryGetValue(output, out var selection);
+
+        if (!int.TryParse(output.StandardOutput, out var index))
+            index = -1;
+        _ = suggestionDictionary.TryGetValue(index, out var selection);
         return selection;
     }
 
