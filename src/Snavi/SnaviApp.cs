@@ -52,7 +52,6 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
     {
         var cheat = await ui.PickAsync(
             new RenderedCommandTemplate("Choose a Command", 0..0),
-            "Command: ",
             this.EnumerateValidCheatsAsync(cancellationToken),
             cancellationToken
         );
@@ -78,7 +77,6 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
         {
             var extraArguments = await ui.InputAsync(
                 result,
-                "Extra Arguments: ",
                 Array.Empty<ArgumentSuggestion>().ToAsyncEnumerable(),
                 cancellationToken
             );
@@ -96,7 +94,7 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
     )
     {
         var suggestions = new ArgumentProviderExector(directory).RunAsync(variable.Provider, variables, cancellationToken);
-        var result = await ui.InputAsync(header, $"{variable.Name}: ", suggestions, cancellationToken);
+        var result = await ui.InputAsync(header, suggestions, cancellationToken);
         return result;
     }
 }

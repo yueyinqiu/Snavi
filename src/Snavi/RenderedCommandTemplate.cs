@@ -21,13 +21,17 @@ public sealed record RenderedCommandTemplate(string String, Range Highlight) : I
     }
 
     public static RenderedCommandTemplate FromCommand(
-        IReadOnlyList<CommandToken> command,
-        IReadOnlyList<string>? variables
+        IEnumerable<CommandToken> command,
+        IEnumerable<string>? variables,
+        bool extraArguments
     )
     {
-        using var variableEnumerator = (variables ?? Enumerable.Empty<string>()).GetEnumerator();
-        Range? highlight = variables is null ? 0..0 : null;
+        if (extraArguments)
+            command = command.Append(new CommandTokenVariable("args", new ArgumentProviderEmpty()));
 
+        using var variableEnumerator = (variables ?? []).GetEnumerator();
+        Range? highlight = variables is null ? 0..0 : null;
+        
         var builder = new StringBuilder();
         foreach (var token in command)
         {

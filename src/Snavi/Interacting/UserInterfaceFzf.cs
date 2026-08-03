@@ -8,7 +8,6 @@ sealed class UserInterfaceFzf : IUserInterface
 {
     public async Task<T?> PickAsync<T>(
         IHighlightedString title,
-        string prompt,
         IAsyncEnumerable<T> suggestions,
         CancellationToken cancellationToken
     ) where T : IPickable
@@ -43,7 +42,6 @@ sealed class UserInterfaceFzf : IUserInterface
 
     public async Task<string?> InputAsync(
         IHighlightedString title,
-        string prompt,
         IAsyncEnumerable<IPickable> suggestions,
         CancellationToken cancellationToken
     )
