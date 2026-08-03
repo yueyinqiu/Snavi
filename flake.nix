@@ -15,7 +15,7 @@
           pkgs.dotnetCorePackages.sdk_10_0
           pkgs.fzf
           pkgs.ouch
-          (pkgs.writeShellScriptBin "publish" ''
+          (pkgs.writeShellScriptBin "snavi-dev-publish" ''
             set -euo pipefail
             tmpdir=$(mktemp -d)
             dotnet publish src/Snavi/Snavi.csproj -c Release -o "$tmpdir"
