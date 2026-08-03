@@ -8,6 +8,7 @@ sealed class UserInterfaceFzf : IUserInterface
 {
     public async Task<T?> PickAsync<T>(
         IHighlightedString title,
+        string prompt,
         IAsyncEnumerable<T> suggestions,
         CancellationToken cancellationToken
     ) where T : IPickable
@@ -24,7 +25,9 @@ sealed class UserInterfaceFzf : IUserInterface
 
             "--accept-nth", "1",
             "--with-nth", "{2}        {3}",
-            "--delimiter", delimiter
+            "--delimiter", delimiter,
+            "--preview", $"printf '{prompt}%s\\n' {2}",
+            "--preview-window", "down:1:border"
         ]);
         command = command.WithStandardInputPipe(PipeSource.FromString(
             string.Join(
@@ -42,6 +45,7 @@ sealed class UserInterfaceFzf : IUserInterface
 
     public async Task<string?> InputAsync(
         IHighlightedString title,
+        string prompt,
         IAsyncEnumerable<IPickable> suggestions,
         CancellationToken cancellationToken
     )
@@ -57,7 +61,9 @@ sealed class UserInterfaceFzf : IUserInterface
 
             "--with-nth", "{1}        {2}",
             "--delimiter", delimiter,
-            "--bind", "tab:transform-query(printf '%s' '{1}')"
+            "--bind", "tab:transform-query(printf '%s' '{1}')",
+            "--preview", $"printf '{prompt}%s\\n' {{q}}",
+            "--preview-window", "down:1:border"
         ]);
         var lines = await suggestions
             .Select(s => $"{s.Value}{delimiter}{s.Description}")
