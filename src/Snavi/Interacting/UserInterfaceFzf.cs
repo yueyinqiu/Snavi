@@ -26,7 +26,7 @@ sealed class UserInterfaceFzf : IUserInterface
             "--accept-nth", "1",
             "--with-nth", "{2}        {3}",
             "--delimiter", delimiter,
-            "--preview", $"printf '{prompt}%s\\n' {2}",
+            "--preview", $"printf '{prompt}%s\\n' {{2}}",
             "--preview-window", "down:1:border"
         ]);
         command = command.WithStandardInputPipe(PipeSource.FromString(
@@ -67,7 +67,7 @@ sealed class UserInterfaceFzf : IUserInterface
         ]);
         var lines = await suggestions
             .Select(s => $"{s.Value}{delimiter}{s.Description}")
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken);
         command = command.WithStandardInputPipe(PipeSource.FromString(string.Join(Environment.NewLine, lines)));
         var output = await command.ExecuteBufferedAsync(cancellationToken);
         if (output.ExitCode != 0 && output.ExitCode != 1)
