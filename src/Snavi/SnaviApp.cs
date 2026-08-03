@@ -64,7 +64,7 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
         {
             if (token is CommandTokenVariable variable)
             {
-                var header = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables);
+                var header = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
                 var value = await InputVariableAsync(variable, cheat.Directory, variables, header, cancellationToken);
                 if (value is null)
                     return "Cancelled.";
@@ -72,7 +72,7 @@ sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
             }
         }
 
-        var result = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables);
+        var result = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
         if (cheat.Cheat.ExtraArguments)
         {
             var extraArguments = await ui.InputAsync(
