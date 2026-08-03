@@ -1,25 +1,25 @@
 {
-  "Description": "删除远程分支",
+  "Description": "Delete a remote branch",
   "Command": [
     { "$type": "CommandTokenLiteral", "Value": "git" },
     { "$type": "CommandTokenLiteral", "Value": "push" },
     { "$type": "CommandTokenLiteral", "Value": "--delete" },
     {
       "$type": "CommandTokenVariable",
-      "Name": "远程",
+      "Name": "remote",
       "Provider": {
         "$type": "ArgumentProviderCsharp",
         "DotnetPath": "dotnet",
-        "ScriptPath": "list_remotes.cs"
+        "ScriptPath": "list-remotes.cs"
       }
     },
     {
       "$type": "CommandTokenVariable",
-      "Name": "分支",
+      "Name": "branch",
       "Provider": {
         "$type": "ArgumentProviderCsharp",
         "DotnetPath": "dotnet",
-        "ScriptPath": "list_remote_branches.cs"
+        "ScriptPath": "list-remote-branches.cs"
       }
     }
   ],

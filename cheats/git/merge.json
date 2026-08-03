@@ -1,11 +1,11 @@
 {
-  "Description": "合并分支到当前分支",
+  "Description": "Merge a branch into the current branch",
   "Command": [
     { "$type": "CommandTokenLiteral", "Value": "git" },
     { "$type": "CommandTokenLiteral", "Value": "merge" },
     {
       "$type": "CommandTokenVariable",
-      "Name": "分支",
+      "Name": "Branch",
       "Provider": {
         "$type": "ArgumentProviderCsharp",
         "DotnetPath": "dotnet",

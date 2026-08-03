@@ -1,5 +1,5 @@
 {
-  "Description": "运行一个容器",
+  "Description": "Run a container",
   "Command": [
     { "$type": "CommandTokenLiteral", "Value": "docker" },
     { "$type": "CommandTokenLiteral", "Value": "run" },
@@ -7,11 +7,11 @@
     { "$type": "CommandTokenLiteral", "Value": "-it" },
     {
       "$type": "CommandTokenVariable",
-      "Name": "镜像",
+      "Name": "image",
       "Provider": {
         "$type": "ArgumentProviderCsharp",
         "DotnetPath": "dotnet",
-        "ScriptPath": "list_images.cs"
+        "ScriptPath": "list-images.cs"
       }
     }
   ],
