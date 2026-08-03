@@ -4,7 +4,7 @@ using Snavi.CheatModeling;
 using Snavi.Executing;
 using Snavi.Interacting;
 
-namespace Snavi.Interaction;
+namespace Snavi;
 
 sealed class SnaviApp(IReadOnlyList<FileInfo> cheats, IUserInterface ui)
 {
