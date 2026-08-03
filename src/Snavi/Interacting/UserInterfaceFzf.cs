@@ -62,6 +62,10 @@ sealed class UserInterfaceFzf : IUserInterface
             .ToArrayAsync();
         command = command.WithStandardInputPipe(PipeSource.FromString(string.Join(Environment.NewLine,lines)));
         var output = await command.ExecuteBufferedAsync(cancellationToken);
-        return output.StandardOutput.Split(Environment.NewLine)[0];
+        var outputLines = output.StandardOutput.Split(Environment.NewLine);
+        var query = outputLines[0];
+        if (query.Length == 0 && outputLines.Length > 1)
+            return outputLines[1].Split(delimiter, 2)[0];
+        return query;
     }
 }
