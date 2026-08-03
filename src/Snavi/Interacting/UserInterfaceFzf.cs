@@ -57,7 +57,8 @@ sealed class UserInterfaceFzf : IUserInterface
 
             "--accept-nth", "1",
             "--with-nth", "{1}        {2}",
-            "--delimiter", delimiter
+            "--delimiter", delimiter,
+            "--bind", "tab:transform-query(printf '%s' '{1}')"
         ]);
         var lines = await suggestions
             .Select(s => $"{s.Value}{delimiter}{s.Description}")
