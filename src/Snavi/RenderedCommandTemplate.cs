@@ -40,7 +40,7 @@ public sealed record RenderedCommandTemplate(string String, Range Highlight) : I
                     {
                         var name = $"<{variable.Name}>";
                         builder.Append(name);
-                        highlight ??= (builder.Length - 1 - name.Length)..(builder.Length - 1);
+                        highlight ??= (builder.Length - name.Length)..builder.Length;
                     }
                     break;
                 case CommandTokenLiteral literal:

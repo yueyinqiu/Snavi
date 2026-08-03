@@ -78,7 +78,7 @@ sealed class UserInterfaceFzf : IUserInterface
         var (offset, length) = highlightedString.Highlight.GetOffsetAndLength(highlightedString.String.Length);
         var builder = new StringBuilder();
         builder.Append(highlightedString.String, 0, offset);
-        builder.Append("\x1b[1m");
+        builder.Append("\x1b[4m");
         builder.Append(highlightedString.String, offset, length);
         builder.Append("\x1b[0m");
         builder.Append(highlightedString.String, offset + length, highlightedString.String.Length - offset - length);
