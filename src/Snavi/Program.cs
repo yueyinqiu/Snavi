@@ -10,13 +10,13 @@ namespace Snavi;
 public partial class RunCommand : ICommand
 {
     [CommandOption("cheats", 'c')]
-    public required IReadOnlyList<FileInfo> Cheats { get; init; }
+    public required IReadOnlyList<FileInfo> Cheats { get; set; }
 
     [CommandOption("dotnet")]
-    public required string Dotnet { get; init; } = "dotnet";
+    public required string Dotnet { get; set; } = "dotnet";
 
     [CommandOption("fzf")]
-    public required string Fzf { get; init; } = "fzf";
+    public required string Fzf { get; set; } = "fzf";
 
     public async ValueTask ExecuteAsync(IConsole console)
     {
