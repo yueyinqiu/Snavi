@@ -7,7 +7,13 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/Snavi/bin/Debug/net10.0/Snavi.dll",
-            "args": ["run", "-c", "/home/yueyinqiu/p/Snavi/Snavi/cheats/docker/run.json"],
+            "args": [
+                "run",
+                "-c", "${workspaceFolder}/cheats/git/commit.json",
+                "-c", "${workspaceFolder}/cheats/git/merge.json",
+                "-c", "${workspaceFolder}/cheats/git/delete-remote-branch.json",
+                "-c", "${workspaceFolder}/cheats/docker/run.json"
+            ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
         }

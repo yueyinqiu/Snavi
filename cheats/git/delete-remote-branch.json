@@ -1,23 +1,23 @@
 {
   "Description": "删除远程分支",
   "Command": [
-    { "Type": "CommandTokenLiteral", "Value": "git" },
-    { "Type": "CommandTokenLiteral", "Value": "push" },
-    { "Type": "CommandTokenLiteral", "Value": "--delete" },
+    { "$type": "CommandTokenLiteral", "Value": "git" },
+    { "$type": "CommandTokenLiteral", "Value": "push" },
+    { "$type": "CommandTokenLiteral", "Value": "--delete" },
     {
-      "Type": "CommandTokenVariable",
+      "$type": "CommandTokenVariable",
       "Name": "远程",
       "Provider": {
-        "Type": "ArgumentProviderCsharp",
+        "$type": "ArgumentProviderCsharp",
         "DotnetPath": "dotnet",
         "ScriptPath": "list_remotes.cs"
       }
     },
     {
-      "Type": "CommandTokenVariable",
+      "$type": "CommandTokenVariable",
       "Name": "分支",
       "Provider": {
-        "Type": "ArgumentProviderCsharp",
+        "$type": "ArgumentProviderCsharp",
         "DotnetPath": "dotnet",
         "ScriptPath": "list_remote_branches.cs"
       }

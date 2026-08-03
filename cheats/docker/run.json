@@ -1,15 +1,15 @@
 {
   "Description": "运行一个容器",
   "Command": [
-    { "Type": "CommandTokenLiteral", "Value": "docker" },
-    { "Type": "CommandTokenLiteral", "Value": "run" },
-    { "Type": "CommandTokenLiteral", "Value": "--rm" },
-    { "Type": "CommandTokenLiteral", "Value": "-it" },
+    { "$type": "CommandTokenLiteral", "Value": "docker" },
+    { "$type": "CommandTokenLiteral", "Value": "run" },
+    { "$type": "CommandTokenLiteral", "Value": "--rm" },
+    { "$type": "CommandTokenLiteral", "Value": "-it" },
     {
-      "Type": "CommandTokenVariable",
+      "$type": "CommandTokenVariable",
       "Name": "镜像",
       "Provider": {
-        "Type": "ArgumentProviderCsharp",
+        "$type": "ArgumentProviderCsharp",
         "DotnetPath": "dotnet",
         "ScriptPath": "list_images.cs"
       }
