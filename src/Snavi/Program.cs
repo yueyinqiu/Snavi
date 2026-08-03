@@ -2,7 +2,6 @@
 using CliFx.Binding;
 using CliFx.Infrastructure;
 using Snavi.Interacting;
-using Snavi.Interaction;
 
 namespace Snavi;
 
