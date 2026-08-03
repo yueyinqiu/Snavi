@@ -14,8 +14,14 @@
         packages = [
           pkgs.dotnetCorePackages.sdk_10_0
           pkgs.fzf
-          (pkgs.writeShellScriptBin "snavi-dev-publish" ''
-            dotnet publish src/Snavi/Snavi.csproj -c Release -o publish
+          pkgs.ouch
+          (pkgs.writeShellScriptBin "publish" ''
+            set -euo pipefail
+            tmpdir=$(mktemp -d)
+            dotnet publish src/Snavi/Snavi.csproj -c Release -o "$tmpdir"
+            mkdir -p publish
+            ouch compress "$tmpdir"/* publish/Snavi.zip
+            rm -rf "$tmpdir"
           '')
         ];
         shellHook = ''
