@@ -57,12 +57,10 @@ sealed class UserInterfaceFzf : IUserInterface
             "--with-nth", "2",
             "--delimiter", delimiter
         ]);
-        command = command.WithStandardInputPipe(PipeSource.FromString(
-            string.Join(
-                Environment.NewLine,
-                suggestions.Select(s => $"{s.Value}{delimiter}{s.Description}")
-            )
-        ));
+        var lines = await suggestions
+            .Select(s => $"{s.Value}{delimiter}{s.Description}")
+            .ToArrayAsync();
+        command = command.WithStandardInputPipe(PipeSource.FromString(string.Join(Environment.NewLine,lines)));
         var output = await command.ExecuteBufferedAsync(cancellationToken);
         return output.StandardOutput.Split(Environment.NewLine)[0];
     }
