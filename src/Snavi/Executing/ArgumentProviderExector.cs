@@ -3,24 +3,24 @@ using Snavi.Modeling;
 
 namespace Snavi.Executing;
 
-sealed class ArgumentProviderExector(string dotnet) : IArgumentProviderExecutor<ArgumentProvider>
+sealed class ArgumentSuggesterExector(string dotnet) : IArgumentSuggesterExecutor<ArgumentSuggesterBase>
 {
     public IAsyncEnumerable<ArgumentSuggestion> RunAsync(
-        ArgumentProvider provider,
+        ArgumentSuggesterBase suggester,
         DirectoryInfo? directory,
-        IReadOnlyList<string> variables,
+        IReadOnlyList<string> givenArguments,
         CancellationToken cancellationToken
     )
     {
-        return provider switch
+        return suggester switch
         {
-            ArgumentProviderCsharp csharp => new ArgumentProviderCsharpExecutor(dotnet).RunAsync(
-                csharp, directory, variables, cancellationToken
+            ArgumentSuggesterCsharp csharp => new ArgumentSuggesterCsharpExecutor(dotnet).RunAsync(
+                csharp, directory, givenArguments, cancellationToken
             ),
-            ArgumentProviderEmpty empty => new ArgumentProviderEmptyExecutor().RunAsync(
-                empty, directory, variables, cancellationToken
+            ArgumentSuggesterEmpty empty => new ArgumentSuggesterEmptyExecutor().RunAsync(
+                empty, directory, givenArguments, cancellationToken
             ),
-            _ => throw new Exception($"Unknown argument provider type '{provider.GetType().Name}'.")
+            _ => throw new Exception($"Unknown argument suggester type '{suggester.GetType().Name}'.")
         };
     }
 }

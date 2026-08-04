@@ -3,12 +3,12 @@ using Snavi.Modeling;
 
 namespace Snavi.Core;
 
-interface IArgumentProviderExecutor<T> where T : ArgumentProvider
+interface IArgumentSuggesterExecutor<T> where T : ArgumentSuggesterBase
 {
     IAsyncEnumerable<ArgumentSuggestion> RunAsync(
-        T provider,
+        T suggester,
         DirectoryInfo? directory,
-        IReadOnlyList<string> variables,
+        IReadOnlyList<string> givenArguments,
         CancellationToken cancellationToken
     );
 }

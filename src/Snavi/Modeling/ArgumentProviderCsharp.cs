@@ -1,3 +1,3 @@
 namespace Snavi.Modeling;
 
-public sealed record ArgumentProviderCsharp(string ScriptPath) : ArgumentProvider;
+public sealed record ArgumentSuggesterCsharp(string ScriptPath) : ArgumentSuggesterBase;

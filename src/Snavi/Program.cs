@@ -21,7 +21,7 @@ public partial class RunCommand : ICommand
 
     public async ValueTask ExecuteAsync(IConsole console)
     {
-        var result = await new SnaviApp(Cheats, new UserInterfaceFzf(Fzf), new ArgumentProviderExector(Dotnet)).RunAsync(console.RegisterCancellationHandler());
+        var result = await new SnaviApp(Cheats, new UserInterfaceFzf(Fzf), new ArgumentSuggesterExector(Dotnet)).RunAsync(console.RegisterCancellationHandler());
         console.WriteLine(result);
     }
 }

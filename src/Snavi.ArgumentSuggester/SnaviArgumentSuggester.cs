@@ -6,7 +6,7 @@ namespace Snavi.ArgumentSuggester;
 public abstract class SnaviArgumentSuggester
 {
     public abstract IAsyncEnumerable<(string Value, string Description)> SuggestAsync(
-        IReadOnlyList<string> variableValues,
+        IReadOnlyList<string> givenArguments,
         DirectoryInfo currentDirectory,
         DirectoryInfo temporaryDirectory,
         CancellationToken cancellationToken
@@ -17,21 +17,21 @@ public abstract class SnaviArgumentSuggester
         using var inputStream = Console.OpenStandardInput();
         var input = await JsonSerializer.DeserializeAsync(
             inputStream,
-            ArgumentProviderInputSerializerContext.Default.ArgumentProviderInput,
+            ArgumentSuggesterInputSerializerContext.Default.ArgumentSuggesterInput,
             cancellationToken
         )!;
         var output = await this.SuggestAsync(
-            input!.VariableValues,
+            input!.GivenArguments,
             new DirectoryInfo(input.TemporaryDirectoryPath),
             new DirectoryInfo(input.TemporaryDirectoryPath),
             cancellationToken
-        ).Select(x => new ArgumentProviderOutput.Completion(x.Value, x.Description)).ToArrayAsync();
+        ).Select(x => new ArgumentSuggesterOutput.Suggestion(x.Value, x.Description)).ToArrayAsync();
 
         using var outputStream = new FileStream(input.OutputFilePath, FileMode.Create, FileAccess.Write);
         await JsonSerializer.SerializeAsync(
             outputStream,
             new ArgumentProviderOutput(output),
-            ArgumentProviderOutputSerializerContext.Default.ArgumentProviderOutput,
+            ArgumentSuggesterOutputSerializerContext.Default.ArgumentProviderOutput,
             cancellationToken
         );
     }

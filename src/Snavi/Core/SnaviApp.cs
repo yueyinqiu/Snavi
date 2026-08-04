@@ -9,7 +9,7 @@ namespace Snavi.Core;
 sealed class SnaviApp(
     IReadOnlyList<FileInfo> cheats,
     IUserInterface ui,
-    IArgumentProviderExecutor<ArgumentProvider> executor
+    IArgumentSuggesterExecutor<ArgumentSuggesterBase> executor
 )
 {
     private async IAsyncEnumerable<PickingCommand> EnumerateValidCheatsAsync(
@@ -64,32 +64,32 @@ sealed class SnaviApp(
         if (cheat is null)
             return "Cancelled.";
 
-        var variables = new List<string>();
+        var arguments = new List<string>();
         foreach (var token in cheat.Cheat.Command)
         {
             if (token is CommandTokenVariable variable)
             {
-                var header = RenderingCommand.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
-                var suggestions = executor.RunAsync(variable.Provider, cheat.Directory, variables, cancellationToken);
+                var header = RenderingCommand.FromCommand(cheat.Cheat.Command, arguments, cheat.Cheat.ExtraArguments);
+                var suggestions = executor.RunAsync(variable.Suggester, cheat.Directory, arguments, cancellationToken);
                 var value = await ui.InputAsync(header, $"{variable.Name} = ", suggestions, cancellationToken);
                 if (value is null)
                     return "Cancelled.";
-                variables.Add(value);
+                arguments.Add(value);
             }
         }
 
         if (cheat.Cheat.ExtraArguments)
         {
             var value = await ui.InputAsync(
-                RenderingCommand.FromCommand(cheat.Cheat.Command, variables, true),
+                RenderingCommand.FromCommand(cheat.Cheat.Command, arguments, true),
                 "Extra Arguments: ",
                 Array.Empty<ArgumentSuggestion>().ToAsyncEnumerable(),
                 cancellationToken
             );
             if (value is null)
                 return "Cancelled.";
-            variables.Add(value);
+            arguments.Add(value);
         }
-        return RenderingCommand.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments).String;
+        return RenderingCommand.FromCommand(cheat.Cheat.Command, arguments, cheat.Cheat.ExtraArguments).String;
     }
 }

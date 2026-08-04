@@ -24,15 +24,15 @@ public sealed record RenderingCommand(string String, Range Highlight) : IHighlig
 
     public static RenderingCommand FromCommand(
         IEnumerable<CommandToken> command,
-        IEnumerable<string>? variables,
+        IEnumerable<string>? arguments,
         bool extraArguments
     )
     {
         if (extraArguments)
             command = command.Append(new CommandTokenExtraArguments());
 
-        using var variableEnumerator = (variables ?? []).GetEnumerator();
-        Range? highlight = variables is null ? 0..0 : null;
+        using var argumentEnumerator = (arguments ?? []).GetEnumerator();
+        Range? highlight = arguments is null ? 0..0 : null;
         
         var builder = new StringBuilder();
         foreach (var token in command)
@@ -40,8 +40,8 @@ public sealed record RenderingCommand(string String, Range Highlight) : IHighlig
             switch (token)
             {
                 case CommandTokenVariable variable:
-                    if (variableEnumerator.MoveNext())
-                        builder.Append(Escape(variableEnumerator.Current));
+                    if (argumentEnumerator.MoveNext())
+                        builder.Append(Escape(argumentEnumerator.Current));
                     else
                     {
                         var name = $"<{variable.Name}>";
@@ -53,8 +53,8 @@ public sealed record RenderingCommand(string String, Range Highlight) : IHighlig
                     builder.Append(Escape(literal.Value));
                     break;
                 case CommandTokenExtraArguments:
-                    if (variableEnumerator.MoveNext())
-                        builder.Append(variableEnumerator.Current);
+                    if (argumentEnumerator.MoveNext())
+                        builder.Append(argumentEnumerator.Current);
                     else
                     {
                         var name = $"<args>";

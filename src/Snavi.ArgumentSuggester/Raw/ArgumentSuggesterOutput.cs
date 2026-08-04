@@ -1,6 +1,6 @@
 namespace Snavi.ArgumentSuggester.Raw;
 
-public sealed record ArgumentProviderOutput(IReadOnlyList<ArgumentProviderOutput.Completion> Completions)
+public sealed record ArgumentSuggesterOutput(IReadOnlyList<ArgumentSuggesterOutput.Suggestion> Suggestions)
 {
-    public sealed record Completion(string Value, string Description);
+    public sealed record Suggestion(string Value, string Description);
 }

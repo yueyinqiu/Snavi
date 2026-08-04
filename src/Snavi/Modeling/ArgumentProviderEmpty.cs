@@ -1,3 +1,3 @@
 namespace Snavi.Modeling;
 
-public sealed record ArgumentProviderEmpty() : ArgumentProvider;
+public sealed record ArgumentSuggesterEmpty() : ArgumentSuggesterBase;

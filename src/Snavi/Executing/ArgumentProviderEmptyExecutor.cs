@@ -4,12 +4,12 @@ using Snavi.Modeling;
 
 namespace Snavi.Executing;
 
-sealed class ArgumentProviderEmptyExecutor : IArgumentProviderExecutor<ArgumentProviderEmpty>
+sealed class ArgumentSuggesterEmptyExecutor : IArgumentSuggesterExecutor<ArgumentSuggesterEmpty>
 {
     public async IAsyncEnumerable<ArgumentSuggestion> RunAsync(
-        ArgumentProviderEmpty provider,
+        ArgumentSuggesterEmpty suggester,
         DirectoryInfo? directory,
-        IReadOnlyList<string> variables,
+        IReadOnlyList<string> givenArguments,
         [EnumeratorCancellation] CancellationToken cancellationToken
     )
     {

@@ -8,7 +8,7 @@ namespace Snavi.ArgumentSuggester.Raw;
     RespectNullableAnnotations = true,
     RespectRequiredConstructorParameters = true
 )]
-[JsonSerializable(typeof(ArgumentProviderInput))]
-public partial class ArgumentProviderInputSerializerContext : JsonSerializerContext
+[JsonSerializable(typeof(ArgumentSuggesterInput))]
+public partial class ArgumentSuggesterInputSerializerContext : JsonSerializerContext
 {
 }
