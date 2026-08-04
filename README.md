@@ -2,7 +2,19 @@
 
 Snavi is a [navi](https://github.com/denisidoro/navi)-like interactive command-line cheatsheet tool but it's more **s**afe with **s**tructured cheat file and C**S**harp script support.
 
-Check `sample-cheats` for samples. It could be run with:
+Check `sample-cheats` for samples.
+
+## Installation
+
+Simply download `Snavi.zip` in the Releases page, and decompress it. Note that `fzf` and `dotnet` (sdk, >=10) are required.
+
+## Installation (Nix)
+
+A package is provided in [my personal NUR](https://github.com/yueyinqiu/MyNurPackages). (I plan to implement a home-manager module, but probably not now.)
+
+## Usage
+
+It could be run with:
 
 ```sh
 dotnet path/to/Snavi.dll -- run -c git/commit.json -c git/checkout.json -c cat/cat.json
