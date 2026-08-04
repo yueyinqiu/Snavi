@@ -1,0 +1,8 @@
+{
+    "Description": "EXTREME: ExtraArguments with no variables - lone <args> placeholder should be highlighted",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "echo" },
+        { "$type": "CommandTokenLiteral", "Value": "hello" }
+    ],
+    "ExtraArguments": true
+}

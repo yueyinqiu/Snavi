@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script suggestions with newlines, tabs, quotes, spaces, empty values",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "newlines" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "newline-values.cs"
+            }
+        }
+    ],
+    "ExtraArguments": true
+}

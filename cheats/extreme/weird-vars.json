@@ -1,0 +1,32 @@
+{
+    "Description": "EXTREME: weird variable names - spaces, unicode, shell chars, very long",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "tool" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "a name with spaces",
+            "Provider": { "$type": "ArgumentProviderEmpty" }
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "中文变量名",
+            "Provider": { "$type": "ArgumentProviderEmpty" }
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "$dollar(s) `tick` *glob? [x]",
+            "Provider": { "$type": "ArgumentProviderEmpty" }
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "emoji-😀🚀-name",
+            "Provider": { "$type": "ArgumentProviderEmpty" }
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "ThisIsAnExtremelyLongVariableNameThatShouldCompletelyOverflowTheTerminalWidthByItselfForSure",
+            "Provider": { "$type": "ArgumentProviderEmpty" }
+        }
+    ],
+    "ExtraArguments": false
+}

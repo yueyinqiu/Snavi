@@ -1,0 +1,9 @@
+{
+    "Description": "EXTREME: empty string literal token - should render as ''",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "echo" },
+        { "$type": "CommandTokenLiteral", "Value": "" },
+        { "$type": "CommandTokenLiteral", "Value": "end" }
+    ],
+    "ExtraArguments": false
+}

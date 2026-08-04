@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script returns zero suggestions - empty list",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "no-options" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "no-options.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}

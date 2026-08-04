@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script returns 2000 identical suggestions",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "duplicates" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "duplicates.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}

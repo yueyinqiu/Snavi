@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script has a compile error - dotnet run fails before running",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "crash-compile" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "crash-compile.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}

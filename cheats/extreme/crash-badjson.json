@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script exits 0 but writes invalid JSON to completions file",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "crash-badjson" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "crash-badjson.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}

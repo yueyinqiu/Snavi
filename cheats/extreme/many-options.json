@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script returns 500 suggestions",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "many-options" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "many-options.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}

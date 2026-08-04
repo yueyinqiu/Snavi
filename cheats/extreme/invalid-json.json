@@ -1,0 +1,5 @@
+{
+    "Description": "EXTREME: malformed JSON - should be silently dropped",
+    "Command": [
+        {
+            "$type": "CommandTokenLiteral",

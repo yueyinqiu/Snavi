@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script exits 0 but never writes the completions file",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "crash-nooutput" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "crash-nooutput.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}

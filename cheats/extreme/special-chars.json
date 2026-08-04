@@ -1,0 +1,15 @@
+{
+    "Description": "EXTREME: script suggestions full of special characters",
+    "Command": [
+        { "$type": "CommandTokenLiteral", "Value": "special" },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "pick",
+            "Provider": {
+                "$type": "ArgumentProviderCsharp",
+                "ScriptPath": "special-chars.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}
