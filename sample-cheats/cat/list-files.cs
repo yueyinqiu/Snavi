@@ -14,7 +14,7 @@ class Suggester : SnaviArgumentSuggester
     )
     {
         return currentDirectory.EnumerateFiles()
-            .Select(x => (x.FullName, ""))
+            .Select(x => (Path.GetRelativePath(currentDirectory.FullName, x.FullName), ""))
             .ToAsyncEnumerable();
     }
 }
