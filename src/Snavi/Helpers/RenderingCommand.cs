@@ -10,7 +10,7 @@ public sealed record RenderingCommand(string String, Range Highlight) : IHighlig
     private static readonly SearchValues<char> safeCharacters = SearchValues.Create(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@%+=:,./-"
     );
-    
+
     private static string Escape(string token)
     {
         if (token == "")
@@ -20,6 +20,8 @@ public sealed record RenderingCommand(string String, Range Highlight) : IHighlig
         return token;
     }
 
+    record CommandTokenExtraArguments : CommandToken;
+
     public static RenderingCommand FromCommand(
         IEnumerable<CommandToken> command,
         IEnumerable<string>? variables,
@@ -27,7 +29,7 @@ public sealed record RenderingCommand(string String, Range Highlight) : IHighlig
     )
     {
         if (extraArguments)
-            command = command.Append(new CommandTokenVariable("args", new ArgumentProviderEmpty()));
+            command = command.Append(new CommandTokenExtraArguments());
 
         using var variableEnumerator = (variables ?? []).GetEnumerator();
         Range? highlight = variables is null ? 0..0 : null;
@@ -49,6 +51,16 @@ public sealed record RenderingCommand(string String, Range Highlight) : IHighlig
                     break;
                 case CommandTokenLiteral literal:
                     builder.Append(Escape(literal.Value));
+                    break;
+                case CommandTokenExtraArguments:
+                    if (variableEnumerator.MoveNext())
+                        builder.Append(variableEnumerator.Current);
+                    else
+                    {
+                        var name = $"<args>";
+                        builder.Append(name);
+                        highlight ??= (builder.Length - name.Length)..builder.Length;
+                    }
                     break;
             }
             builder.Append(' ');

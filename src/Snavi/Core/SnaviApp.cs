@@ -70,37 +70,26 @@ sealed class SnaviApp(
             if (token is CommandTokenVariable variable)
             {
                 var header = RenderingCommand.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
-                var value = await InputVariableAsync(variable, cheat.Directory, variables, header, cancellationToken);
+                var suggestions = executor.RunAsync(variable.Provider, cheat.Directory, variables, cancellationToken);
+                var value = await ui.InputAsync(header, $"{variable.Name} = ", suggestions, cancellationToken);
                 if (value is null)
                     return "Cancelled.";
                 variables.Add(value);
             }
         }
 
-        var result = RenderingCommand.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
         if (cheat.Cheat.ExtraArguments)
         {
-            var extraArguments = await ui.InputAsync(
-                result,
+            var value = await ui.InputAsync(
+                RenderingCommand.FromCommand(cheat.Cheat.Command, variables, true),
                 "Extra Arguments: ",
                 Array.Empty<ArgumentSuggestion>().ToAsyncEnumerable(),
                 cancellationToken
             );
-            return $"{result.String} {extraArguments}";
+            if (value is null)
+                return "Cancelled.";
+            variables.Add(value);
         }
-        return result.String;
-    }
-
-    private async Task<string?> InputVariableAsync(
-        CommandTokenVariable variable,
-        DirectoryInfo? directory,
-        IReadOnlyList<string> variables,
-        RenderingCommand header,
-        CancellationToken cancellationToken
-    )
-    {
-        var suggestions = executor.RunAsync(variable.Provider, directory, variables, cancellationToken);
-        var result = await ui.InputAsync(header, $"{variable.Name} = ", suggestions, cancellationToken);
-        return result;
+        return RenderingCommand.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments).String;
     }
 }
