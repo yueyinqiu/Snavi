@@ -1,5 +1,5 @@
 {
-    "Description": "Create a commit",
+    "Description": "Record changes to the repository",
     "Command": [
         {
             "$type": "CommandTokenLiteral",
@@ -16,10 +16,10 @@
         {
             "$type": "CommandTokenVariable",
             "Name": "message",
-            "Provider": {
-                "$type": "ArgumentProviderEmpty"
+            "Suggester": {
+                "$type": "ArgumentSuggesterEmpty"
             }
         }
     ],
-    "ExtraArguments": false
+    "ExtraArguments": true
 }

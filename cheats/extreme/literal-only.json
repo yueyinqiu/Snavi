@@ -1,9 +1,0 @@
-{
-    "Description": "EXTREME: no variables, no extra args - a pure literal command",
-    "Command": [
-        { "$type": "CommandTokenLiteral", "Value": "systemctl" },
-        { "$type": "CommandTokenLiteral", "Value": "restart" },
-        { "$type": "CommandTokenLiteral", "Value": "nginx" }
-    ],
-    "ExtraArguments": false
-}

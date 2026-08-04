@@ -1,7 +1,0 @@
-{
-    "Description": "EXTREME: Command is an object, not an array - deserialization fails",
-    "Command": {
-        "not": "an array"
-    },
-    "ExtraArguments": false
-}
