@@ -1,4 +1,4 @@
-namespace Snavi.Executing;
+namespace Snavi.ArgumentSuggester.Raw;
 
 public sealed record ArgumentProviderOutput(IReadOnlyList<ArgumentProviderOutput.Completion> Completions)
 {

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Snavi.Executing;
+namespace Snavi.ArgumentSuggester.Raw;
 
 [JsonSourceGenerationOptions(
     AllowTrailingCommas = true,
@@ -9,6 +9,6 @@ namespace Snavi.Executing;
     RespectRequiredConstructorParameters = true
 )]
 [JsonSerializable(typeof(ArgumentProviderInput))]
-partial class ArgumentProviderInputSerializerContext : JsonSerializerContext
+public partial class ArgumentProviderInputSerializerContext : JsonSerializerContext
 {
 }

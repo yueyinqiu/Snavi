@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="../Snavi.ArgumentSuggester/Snavi.ArgumentSuggester.csproj" />
         <PackageReference Include="CliWrap" Version="3.10.4" />
         <PackageReference Include="CliFx" Version="3.0.0" />
     </ItemGroup>
