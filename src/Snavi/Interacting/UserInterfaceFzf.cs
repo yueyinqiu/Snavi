@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 using CliWrap;
 using CliWrap.Buffered;
@@ -7,6 +8,29 @@ namespace Snavi.Interacting;
 
 sealed class UserInterfaceFzf(string fzf) : IUserInterface
 {
+    private IEnumerable<int> GetWhiteSpaceCountForTable(
+        IEnumerable<string> firstColumn,
+        int limit,
+        int minimal = 4
+    )
+    {
+        firstColumn = [.. firstColumn];
+
+        var suggestedLength = firstColumn.Max(x => x.Length);
+
+        limit -= minimal;
+        if (suggestedLength > limit)
+            suggestedLength = limit;
+
+        foreach (var item in firstColumn)
+        {
+            var difference = suggestedLength - item.Length;
+            if (difference < 0)
+                difference = 0;
+            yield return difference + minimal;
+        }
+    }
+
     public async Task<T?> PickAsync<T>(
         IHighlightedString title,
         string prompt,
@@ -15,6 +39,10 @@ sealed class UserInterfaceFzf(string fzf) : IUserInterface
     ) where T : IPickable
     {
         var suggestionDictionary = await suggestions.Index().ToDictionaryAsync();
+        var whiteSpaces = GetWhiteSpaceCountForTable(
+            suggestionDictionary.Select(x => x.Value.Value),
+            Console.WindowWidth / 2
+        );
 
         var delimiter = Guid.NewGuid().ToString("N");
 
@@ -25,7 +53,7 @@ sealed class UserInterfaceFzf(string fzf) : IUserInterface
             "--header", ToAnsiString(title),
 
             "--accept-nth", "1",
-            "--with-nth", "{2}        {3}",
+            "--with-nth", "{2}{4}{3}",
             "--delimiter", delimiter,
             "--preview", $"printf '{prompt}%s\\n' {{2}}",
             "--preview-window", "down:1:border"
@@ -33,9 +61,14 @@ sealed class UserInterfaceFzf(string fzf) : IUserInterface
         command = command.WithStandardInputPipe(PipeSource.FromString(
             string.Join(
                 Environment.NewLine,
-                suggestionDictionary.Select(kv => $"{kv.Key}{delimiter}{kv.Value.Value}{delimiter}{kv.Value.Description}")
+                from x in suggestionDictionary.Zip(whiteSpaces)
+                let key = x.First.Key
+                let value = x.First.Value.Value
+                let description = x.First.Value.Description
+                let whiteSpace = new string(' ', x.Second)
+                select $"{key}{delimiter}{value}{delimiter}{description}{delimiter}{whiteSpace}")
             )
-        ));
+        );
         var output = await command.ExecuteBufferedAsync(cancellationToken);
 
         if (!int.TryParse(output.StandardOutput, out var index))
@@ -51,6 +84,12 @@ sealed class UserInterfaceFzf(string fzf) : IUserInterface
         CancellationToken cancellationToken
     )
     {
+        var suggestionsSync = await suggestions.ToArrayAsync();
+        var whiteSpaces = GetWhiteSpaceCountForTable(
+            suggestionsSync.Select(x => x.Value),
+            Console.WindowWidth / 2
+        );
+
         var delimiter = Guid.NewGuid().ToString("N");
 
         var command = Cli.Wrap(fzf);
@@ -60,16 +99,22 @@ sealed class UserInterfaceFzf(string fzf) : IUserInterface
             "--ansi",
             "--header", ToAnsiString(title),
 
-            "--with-nth", "{1}        {2}",
+            "--with-nth", "{1}{3}{2}",
             "--delimiter", delimiter,
             "--bind", "tab:transform-query(printf '%s' '{1}')",
             "--preview", $"printf '{prompt}%s\\n' {{q}}",
             "--preview-window", "down:1:border"
         ]);
-        var lines = await suggestions
-            .Select(s => $"{s.Value}{delimiter}{s.Description}")
-            .ToArrayAsync(cancellationToken);
-        command = command.WithStandardInputPipe(PipeSource.FromString(string.Join(Environment.NewLine, lines)));
+        command = command.WithStandardInputPipe(PipeSource.FromString(
+            string.Join(
+                Environment.NewLine,
+                from x in suggestionsSync.Zip(whiteSpaces)
+                let value = x.First.Value
+                let description = x.First.Description
+                let whiteSpace = new string(' ', x.Second)
+                select $"{value}{delimiter}{description}{delimiter}{whiteSpace}")
+            )
+        );
         var output = await command.ExecuteBufferedAsync(cancellationToken);
         if (output.ExitCode != 0 && output.ExitCode != 1)
             return null;

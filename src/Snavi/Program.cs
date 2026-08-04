@@ -14,10 +14,10 @@ public partial class RunCommand : ICommand
     public required IReadOnlyList<FileInfo> Cheats { get; set; }
 
     [CommandOption("dotnet")]
-    public required string Dotnet { get; set; } = "dotnet";
+    public string Dotnet { get; set; } = "dotnet";
 
     [CommandOption("fzf")]
-    public required string Fzf { get; set; } = "fzf";
+    public string Fzf { get; set; } = "fzf";
 
     public async ValueTask ExecuteAsync(IConsole console)
     {
