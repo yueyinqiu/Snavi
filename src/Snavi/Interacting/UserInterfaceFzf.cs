@@ -55,6 +55,7 @@ sealed class UserInterfaceFzf(string fzf) : IUserInterface
             "--accept-nth", "1",
             "--with-nth", "{2}{4}{3}",
             "--delimiter", delimiter,
+            "--bind", "tab:transform-query(printf '%s' {2})",
             "--preview", $"printf '{prompt}%s\\n' {{2}}",
             "--preview-window", "down:1:border"
         ]);
@@ -101,7 +102,7 @@ sealed class UserInterfaceFzf(string fzf) : IUserInterface
 
             "--with-nth", "{1}{3}{2}",
             "--delimiter", delimiter,
-            "--bind", "tab:transform-query(printf '%s' '{1}')",
+            "--bind", "tab:transform-query(printf '%s' {1})",
             "--preview", $"printf '{prompt}%s\\n' {{q}}",
             "--preview-window", "down:1:border"
         ]);
