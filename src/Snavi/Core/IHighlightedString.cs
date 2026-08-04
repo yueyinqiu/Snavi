@@ -1,4 +1,4 @@
-namespace Snavi.Interacting;
+namespace Snavi.Core;
 
 interface IHighlightedString
 {

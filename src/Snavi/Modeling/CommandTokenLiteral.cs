@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
 
-namespace Snavi.CheatModeling;
+namespace Snavi.Modeling;
 
 public sealed record CommandTokenLiteral(string Value) : CommandToken;

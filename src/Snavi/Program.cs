@@ -1,6 +1,7 @@
 ﻿using CliFx;
 using CliFx.Binding;
 using CliFx.Infrastructure;
+using Snavi.Core;
 using Snavi.Executing;
 using Snavi.Interacting;
 

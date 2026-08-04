@@ -1,6 +1,7 @@
 using System.Text;
 using CliWrap;
 using CliWrap.Buffered;
+using Snavi.Core;
 
 namespace Snavi.Interacting;
 

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Snavi.CheatModeling;
+namespace Snavi.Modeling;
 
 [JsonDerivedType(typeof(ArgumentProviderCsharp), nameof(ArgumentProviderCsharp))]
 [JsonDerivedType(typeof(ArgumentProviderEmpty), nameof(ArgumentProviderEmpty))]

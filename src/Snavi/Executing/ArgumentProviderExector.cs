@@ -1,4 +1,5 @@
-using Snavi.CheatModeling;
+using Snavi.Core;
+using Snavi.Modeling;
 
 namespace Snavi.Executing;
 

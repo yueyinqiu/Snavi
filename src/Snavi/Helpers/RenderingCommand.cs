@@ -1,11 +1,11 @@
 using System.Buffers;
 using System.Text;
-using Snavi.CheatModeling;
-using Snavi.Interacting;
+using Snavi.Modeling;
+using Snavi.Core;
 
-namespace Snavi;
+namespace Snavi.Helpers;
 
-public sealed record RenderedCommandTemplate(string String, Range Highlight) : IHighlightedString
+public sealed record RenderingCommand(string String, Range Highlight) : IHighlightedString
 {
     private static readonly SearchValues<char> safeCharacters = SearchValues.Create(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_@%+=:,./-"
@@ -20,7 +20,7 @@ public sealed record RenderedCommandTemplate(string String, Range Highlight) : I
         return token;
     }
 
-    public static RenderedCommandTemplate FromCommand(
+    public static RenderingCommand FromCommand(
         IEnumerable<CommandToken> command,
         IEnumerable<string>? variables,
         bool extraArguments

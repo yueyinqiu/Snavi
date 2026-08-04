@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Snavi.CheatModeling;
+namespace Snavi.Modeling;
 
 [JsonDerivedType(typeof(CommandTokenLiteral), nameof(CommandTokenLiteral))]
 [JsonDerivedType(typeof(CommandTokenVariable), nameof(CommandTokenVariable))]

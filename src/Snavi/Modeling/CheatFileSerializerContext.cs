@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
-using Snavi.CheatModeling;
+
+namespace Snavi.Modeling;
 
 [JsonSerializable(typeof(CheatFile))]
 partial class CheatFileSerializerContext : JsonSerializerContext

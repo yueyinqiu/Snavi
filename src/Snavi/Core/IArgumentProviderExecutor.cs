@@ -1,6 +1,7 @@
-using Snavi.CheatModeling;
+using Snavi.Executing;
+using Snavi.Modeling;
 
-namespace Snavi.Executing;
+namespace Snavi.Core;
 
 interface IArgumentProviderExecutor<T> where T : ArgumentProvider
 {

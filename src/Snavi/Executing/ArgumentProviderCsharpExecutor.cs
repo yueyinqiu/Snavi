@@ -1,7 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using CliWrap;
-using Snavi.CheatModeling;
+using Snavi.Core;
+using Snavi.Modeling;
 
 namespace Snavi.Executing;
 

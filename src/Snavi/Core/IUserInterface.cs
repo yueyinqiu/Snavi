@@ -1,4 +1,6 @@
-namespace Snavi.Interacting;
+using Snavi.Interacting;
+
+namespace Snavi.Core;
 
 interface IUserInterface
 {

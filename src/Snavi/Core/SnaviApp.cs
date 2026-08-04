@@ -1,10 +1,10 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using Snavi.CheatModeling;
 using Snavi.Executing;
-using Snavi.Interacting;
+using Snavi.Helpers;
+using Snavi.Modeling;
 
-namespace Snavi;
+namespace Snavi.Core;
 
 sealed class SnaviApp(
     IReadOnlyList<FileInfo> cheats,
@@ -12,7 +12,7 @@ sealed class SnaviApp(
     IArgumentProviderExecutor<ArgumentProvider> executor
 )
 {
-    private async IAsyncEnumerable<Command> EnumerateValidCheatsAsync(
+    private async IAsyncEnumerable<PickingCommand> EnumerateValidCheatsAsync(
         [EnumeratorCancellation] CancellationToken cancellationToken
     )
     {
@@ -55,7 +55,7 @@ sealed class SnaviApp(
     public async Task<string> RunAsync(CancellationToken cancellationToken)
     {
         var cheat = await ui.PickAsync(
-            new RenderedCommandTemplate("Choose a Command", 0..0),
+            new RenderingCommand("Choose a Command", 0..0),
             "Command: ",
             this.EnumerateValidCheatsAsync(cancellationToken),
             cancellationToken
@@ -69,7 +69,7 @@ sealed class SnaviApp(
         {
             if (token is CommandTokenVariable variable)
             {
-                var header = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
+                var header = RenderingCommand.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
                 var value = await InputVariableAsync(variable, cheat.Directory, variables, header, cancellationToken);
                 if (value is null)
                     return "Cancelled.";
@@ -77,7 +77,7 @@ sealed class SnaviApp(
             }
         }
 
-        var result = RenderedCommandTemplate.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
+        var result = RenderingCommand.FromCommand(cheat.Cheat.Command, variables, cheat.Cheat.ExtraArguments);
         if (cheat.Cheat.ExtraArguments)
         {
             var extraArguments = await ui.InputAsync(
@@ -95,7 +95,7 @@ sealed class SnaviApp(
         CommandTokenVariable variable,
         DirectoryInfo? directory,
         IReadOnlyList<string> variables,
-        RenderedCommandTemplate header,
+        RenderingCommand header,
         CancellationToken cancellationToken
     )
     {
