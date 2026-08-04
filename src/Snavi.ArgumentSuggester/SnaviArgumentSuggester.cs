@@ -22,8 +22,8 @@ public abstract class SnaviArgumentSuggester
         )!;
         var output = await this.SuggestAsync(
             input!.GivenArguments,
-            new DirectoryInfo(input.TemporaryDirectory),
             new DirectoryInfo(input.CurrentDirectory),
+            new DirectoryInfo(input.TemporaryDirectory),
             cancellationToken
         ).Select(x => new ArgumentSuggesterOutput.Suggestion(x.Value, x.Description)).ToArrayAsync();
 

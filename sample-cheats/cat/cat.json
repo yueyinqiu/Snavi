@@ -1,0 +1,18 @@
+{
+    "Description": "concatenate file to standard output",
+    "Command": [
+        {
+            "$type": "CommandTokenLiteral",
+            "Value": "cat"
+        },
+        {
+            "$type": "CommandTokenVariable",
+            "Name": "file",
+            "Suggester": {
+                "$type": "ArgumentSuggesterCsharp",
+                "ScriptPath": "list-files.cs"
+            }
+        }
+    ],
+    "ExtraArguments": false
+}

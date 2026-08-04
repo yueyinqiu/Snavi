@@ -12,7 +12,9 @@
                 "-c",
                 "${workspaceFolder}/sample-cheats/git/commit.json",
                 "-c",
-                "${workspaceFolder}/sample-cheats/git/checkout.json"
+                "${workspaceFolder}/sample-cheats/git/checkout.json",
+                "-c",
+                "${workspaceFolder}/sample-cheats/cat/cat.json"
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"

@@ -1,5 +1,5 @@
 {
-    "Description": "Record changes to the repository",
+    "Description": "record changes to the git repository",
     "Command": [
         {
             "$type": "CommandTokenLiteral",
