@@ -17,11 +17,13 @@
           pkgs.ouch
           (pkgs.writeShellScriptBin "snavi-dev-publish" ''
             set -euo pipefail
-            tmpdir=$(mktemp -d)
-            dotnet publish src/Snavi/Snavi.csproj -c Release -o "$tmpdir"
             mkdir -p publish
-            ouch compress "$tmpdir"/* publish/Snavi.zip
-            rm -rf "$tmpdir"
+            temp=$(mktemp -d -p publish)
+
+            dotnet publish src/Snavi/Snavi.csproj -c Release -o "$temp/Snavi"
+            ouch compress "$temp/Snavi"/* "$temp/Snavi.zip"
+
+            dotnet pack src/Snavi.ArgumentSuggester/Snavi.ArgumentSuggester.csproj -o "$temp"
           '')
         ];
         shellHook = ''

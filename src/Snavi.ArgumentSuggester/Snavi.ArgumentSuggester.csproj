@@ -5,7 +5,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
-        <Version>0.0.2</Version>
+        <Version>0.0.1</Version>
+
+        <Authors>yueyinqiu</Authors>
+		<RepositoryUrl>https://github.com/yueyinqiu/Snavi.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
     
 </Project>

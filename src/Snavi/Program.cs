@@ -7,7 +7,7 @@ using Snavi.Interacting;
 
 namespace Snavi;
 
-[Command("Run")]
+[Command("run")]
 public partial class RunCommand : ICommand
 {
     [CommandOption("cheats", 'c')]
