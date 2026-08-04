@@ -10,7 +10,9 @@
             "args": [
                 "run",
                 "-c",
-                "${workspaceFolder}/sample-cheats/git/commit.json"
+                "${workspaceFolder}/sample-cheats/git/commit.json",
+                "-c",
+                "${workspaceFolder}/sample-cheats/git/checkout.json"
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
