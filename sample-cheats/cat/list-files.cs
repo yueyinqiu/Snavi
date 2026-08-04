@@ -1,4 +1,4 @@
-#:package Snavi.ArgumentSuggester@0.0.1
+#:package Snavi.ArgumentSuggester@0.0.2
 
 using Snavi.ArgumentSuggester;
 
