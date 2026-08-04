@@ -45,7 +45,7 @@ sealed class SnaviApp(
         {
             yield return new (null,
                 new CheatFile(
-                    "Snavi: No valid cheat file found. There will be nothing to suggest.",
+                    "No valid cheat file is found.",
                     [], false
                 )
             );
