@@ -36,6 +36,7 @@ sealed class ArgumentSuggesterCsharpExecutor(string dotnet) : IArgumentSuggester
         command = command.WithStandardInputPipe(PipeSource.FromString(
             JsonSerializer.Serialize(new ArgumentSuggesterInput(
                 suggestions,
+                Environment.CurrentDirectory,
                 logs.CreateSubdirectory("temp").FullName,
                 givenArguments
             ), ArgumentSuggesterInputSerializerContext.Default.ArgumentSuggesterInput)

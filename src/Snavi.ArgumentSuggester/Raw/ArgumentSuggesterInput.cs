@@ -1,7 +1,8 @@
 namespace Snavi.ArgumentSuggester.Raw;
 
 public sealed record ArgumentSuggesterInput(
-    string OutputFilePath,
-    string TemporaryDirectoryPath,
+    string OutputFile,
+    string CurrentDirectory,
+    string TemporaryDirectory,
     IReadOnlyList<string> GivenArguments
 );

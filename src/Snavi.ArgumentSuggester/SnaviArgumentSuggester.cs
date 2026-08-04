@@ -22,16 +22,16 @@ public abstract class SnaviArgumentSuggester
         )!;
         var output = await this.SuggestAsync(
             input!.GivenArguments,
-            new DirectoryInfo(input.TemporaryDirectoryPath),
-            new DirectoryInfo(input.TemporaryDirectoryPath),
+            new DirectoryInfo(input.TemporaryDirectory),
+            new DirectoryInfo(input.CurrentDirectory),
             cancellationToken
         ).Select(x => new ArgumentSuggesterOutput.Suggestion(x.Value, x.Description)).ToArrayAsync();
 
-        using var outputStream = new FileStream(input.OutputFilePath, FileMode.Create, FileAccess.Write);
+        using var outputStream = new FileStream(input.OutputFile, FileMode.Create, FileAccess.Write);
         await JsonSerializer.SerializeAsync(
             outputStream,
-            new ArgumentProviderOutput(output),
-            ArgumentSuggesterOutputSerializerContext.Default.ArgumentProviderOutput,
+            new ArgumentSuggesterOutput(output),
+            ArgumentSuggesterOutputSerializerContext.Default.ArgumentSuggesterOutput,
             cancellationToken
         );
     }
