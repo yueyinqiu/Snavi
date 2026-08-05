@@ -6,13 +6,7 @@
   outputs =
     { nixpkgs, ... }:
     let
-      supportedSystems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "aarch64-darwin"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
     in
     {
       packages = forAllSystems (system: {
@@ -39,6 +33,7 @@
                 ouch compress "$temp/Snavi"/* "$temp/Snavi.zip"
 
                 dotnet pack src/Snavi.ArgumentSuggester/Snavi.ArgumentSuggester.csproj -o "$temp"
+                echo "Don't forget to update the nix package!"
               '')
             ];
             shellHook = ''
