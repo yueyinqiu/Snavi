@@ -66,8 +66,10 @@ Check `sample-cheats` for cheat samples.
 Then it could be run with:
 
 ```sh
-dotnet path/to/Snavi.dll -- run -c path/to/git/commit.json -c path/to/git/checkout.json -c path/to/cat/cat.json
+dotnet path/to/Snavi.dll run -c path/to/git/commit.json -c path/to/git/checkout.json -c path/to/cat/cat.json
 ```
+
+> For the nix package, use `Snavi` instead of `dotnet Snavi.dll`.
 
 It's recommended to be used as a shell widget, you could add this to `.bashrc` and press `Ctrl + g`:
 
