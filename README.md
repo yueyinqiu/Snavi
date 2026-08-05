@@ -2,22 +2,66 @@
 
 Snavi is a [navi](https://github.com/denisidoro/navi)-like interactive command-line cheatsheet tool but it's more **s**afe with **s**tructured cheat file and C**S**harp script support.
 
-Check `sample-cheats` for samples.
-
-## Installation
-
-Simply download `Snavi.zip` in the Releases page, and decompress it. Note that `fzf` and `dotnet` (sdk, >=10) are required.
-
 ## Installation (Nix)
 
-A package is provided in [my personal NUR](https://github.com/yueyinqiu/MyNurPackages). (I plan to implement a home-manager module, but probably not now.)
+A package is exposed in `flake.nix` as `packages.<system>.default`. To use it as a flake input (in home-manager as an example):
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
+    snavi.url = "github:yueyinqiu/Snavi";
+  };
+
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      snavi,
+      ...
+    }:
+    let
+      system = "x86_64-linux";
+    in
+    {
+      homeConfigurations.your-name = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        extraArgs = {
+          snavi = snavi.packages.${system}.default;
+        };
+        modules = [
+          ({ pkgs, snavi, ... }: {
+            home.packages = [
+              snavi
+              pkgs.fzf
+              pkgs.dotnetCorePackages.sdk_10_0
+            ];
+          })
+        ];
+      };
+    };
+}
+```
+
+(I plan to implement a home-manager module, but probably not now.)
+
+If you are using NUR, it's also provided in [my personal NUR](https://github.com/yueyinqiu/MyNurPackages) so you can easily access it.
+
+## Installation (Others)
+
+Download `Snavi.zip` in the Releases page, decompress it, and you will find a `Snavi.dll`.
+
+Note that `fzf` and `dotnet` (sdk, >=10) are required.
 
 ## Usage
 
-It could be run with:
+Check `sample-cheats` for cheat samples.
+
+Then it could be run with:
 
 ```sh
-dotnet path/to/Snavi.dll -- run -c git/commit.json -c git/checkout.json -c cat/cat.json
+dotnet path/to/Snavi.dll -- run -c path/to/git/commit.json -c path/to/git/checkout.json -c path/to/cat/cat.json
 ```
 
 It's recommended to be used as a shell widget, you could add this to `.bashrc` and press `Ctrl + g`:
