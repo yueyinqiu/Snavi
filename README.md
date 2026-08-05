@@ -22,12 +22,12 @@ A package is exposed in `flake.nix` as `packages.<system>.default`. To use it as
       ...
     }:
     let
-      system = "x86_64-linux";
+      system = <your-system>;    # e.g. x86_64-linux
     in
     {
-      homeConfigurations.your-name = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.<your-name> = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
-        extraArgs = {
+        extraSpecialArgs = {
           snavi = snavi.packages.${system}.default;
         };
         modules = [
@@ -37,6 +37,11 @@ A package is exposed in `flake.nix` as `packages.<system>.default`. To use it as
               pkgs.fzf
               pkgs.dotnetCorePackages.sdk_10_0
             ];
+          })
+          ({ ... }: {
+            home.username = <your-name>;
+            home.homeDirectory = <path/to/your/home>;
+            home.stateVersion = <your-home-manager-state-version>;
           })
         ];
       };
