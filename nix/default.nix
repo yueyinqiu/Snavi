@@ -1,10 +1,15 @@
-{ pkgs ? import <nixpkgs> { } }:
+{
+  lib,
+  buildDotnetModule,
+  fetchFromGitHub,
+  dotnetCorePackages,
+}:
 
-pkgs.buildDotnetModule (finalAttrs: {
+buildDotnetModule (finalAttrs: {
   pname = "snavi";
   version = "0.0.4";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "yueyinqiu";
     repo = "Snavi";
     rev = "v${finalAttrs.version}";
@@ -12,7 +17,7 @@ pkgs.buildDotnetModule (finalAttrs: {
   };
 
   projectFile = "src/Snavi/Snavi.csproj";
-  dotnet-sdk = pkgs.dotnetCorePackages.sdk_10_0;
+  dotnet-sdk = dotnetCorePackages.sdk_10_0;
 
   nugetDeps = ./deps.nix;
 
@@ -22,7 +27,7 @@ pkgs.buildDotnetModule (finalAttrs: {
   meta = {
     description = "A navi-like interactive command-line cheatsheet tool but it's more safe with structured cheat file and CSharp script support.";
     homepage = "https://github.com/yueyinqiu/Snavi";
-    license = pkgs.lib.licenses.mit;
+    license = lib.licenses.mit;
     mainProgram = "Snavi";
     maintainers = [ ];
   };

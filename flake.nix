@@ -10,7 +10,7 @@
     in
     {
       packages = forAllSystems (system: {
-        default = nixpkgs.legacyPackages.${system}.callPackage ./default.nix { };
+        default = nixpkgs.legacyPackages.${system}.callPackage ./nix { };
       });
 
       devShells = forAllSystems (
