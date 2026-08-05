@@ -51,7 +51,7 @@ A package is exposed in `flake.nix` as `packages.<system>.default`. To use it as
 
 (I plan to implement a home-manager module, but probably not now.)
 
-If you are using NUR, it's also provided in [my personal NUR](https://github.com/yueyinqiu/MyNurPackages) so you can easily access it.
+If you are using NUR, the package also provided in [my personal NUR](https://github.com/yueyinqiu/MyNurPackages) so you can easily access it.
 
 ## Installation (Others)
 
